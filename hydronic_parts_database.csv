@@ -1,0 +1,5 @@
+component,manufacturer,min_btu,max_btu,pipe_size,model_number,part_number,description,notes
+Air Separator,Resideo,0,80000,"1""",HPV100,HPV100,"Resideo HPV100 air separator, 1"" connection.",Verify against manufacturer submittal and project conditions.
+Air Separator,Resideo,80000,140000,"1-1/4""",HPV125,HPV125,"Resideo HPV125 air separator, 1-1/4"" connection.",Boundary values prefer the higher BTU range in this demo.
+Air Separator,Resideo,140000,250000,"1-1/2""",HPV150,HPV150,"Resideo HPV150 air separator, 1-1/2"" connection.","Verify flow rate, pressure drop, and connection size."
+Air Separator,Resideo,250000,450000,"2""",HPV200,HPV200,"Resideo HPV200 air separator, 2"" connection.",Verify final selection with current manufacturer literature.
