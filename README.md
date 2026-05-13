@@ -1,11 +1,12 @@
 # Hydronic Selector Demo - Streamlit
 
-Expansion tank highlight correction:
+Equipment breakdown update:
 
-- Expansion Tank circle is now centered on the round tank body directly below the air separator.
-- The GIF and the highlight circle are now rendered in the same SVG coordinate system, preventing scaling drift.
-- The circle no longer targets the leader arrow next to the tank.
-- Calibration controls remain available in the sidebar for fine-tuning.
+- Adds a `Selected Equipment Breakdown` section below the animation.
+- Shows all currently selected components based on BTU and expansion tank system type.
+- Adds detailed component cards below the table.
+- Adds a CSV download button for the selected equipment list.
+- Keeps the SVG highlight and calibration controls.
 
 Replace these files in the repo:
 
