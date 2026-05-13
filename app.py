@@ -9,9 +9,10 @@ st.set_page_config(page_title='Hydronic Selector Demo', layout='wide', initial_s
 DATABASE_FILE = Path('hydronic_parts_database.csv')
 DIAGRAM_GIF = Path('hot_water_hydronic_system_selector_demo.gif')
 
-REQUIRED_COLUMNS = {
-    'component': '', 'manufacturer': '', 'system_type': 'Any', 'min_btu': 0, 'max_btu': 0,
-    'pipe_size': 'N/A', 'model_number': '', 'part_number': '', 'description': '', 'notes': ''
+REQUIRED_COLUMNS = {'component':'','manufacturer':'','system_type':'Any','min_btu':0,'max_btu':0,'pipe_size':'N/A','model_number':'','part_number':'','description':'','notes':''}
+COMPONENT_POSITIONS = {
+    'Air Separator': {'callout_left':'37.5%','callout_top':'12.5%','highlight_left':'39.2%','highlight_top':'28.0%','highlight_size':'46px','pointer_width':'90px','pointer_height':'48px'},
+    'Expansion Tank': {'callout_left':'14.0%','callout_top':'35.0%','highlight_left':'21.5%','highlight_top':'43.0%','highlight_size':'58px','pointer_width':'78px','pointer_height':'42px'},
 }
 
 @st.cache_data
@@ -30,10 +31,6 @@ def load_products():
 def image_to_base64(path: Path) -> str:
     return base64.b64encode(path.read_bytes()).decode('utf-8')
 
-def safe_sort(df, preferred_cols):
-    sort_cols = [c for c in preferred_cols if c in df.columns]
-    return df.sort_values(sort_cols) if sort_cols else df
-
 def select_product(df, component, manufacturer, btu, system_type=None):
     filtered = df[(df['component'] == component) & (df['manufacturer'] == manufacturer)].copy()
     if component == 'Expansion Tank' and system_type:
@@ -45,7 +42,8 @@ def current_ranges(df, component, manufacturer, system_type=None):
     filtered = df[(df['component'] == component) & (df['manufacturer'] == manufacturer)].copy()
     if component == 'Expansion Tank' and system_type:
         filtered = filtered[filtered['system_type'] == system_type]
-    return safe_sort(filtered, ['system_type', 'min_btu'])
+    sort_cols = [c for c in ['system_type', 'min_btu'] if c in filtered.columns]
+    return filtered.sort_values(sort_cols) if sort_cols else filtered
 
 products = load_products()
 st.title('HOT WATER HYDRONIC SYSTEM SELECTOR')
@@ -69,20 +67,16 @@ matches = select_product(products, component, manufacturer, int(btu), system_typ
 if matches.empty:
     selected = None
     callout_title = component.upper()
-    callout_body = f'NO MATCH\\n{int(btu):,} BTU'
+    callout_body = f'NO MATCH\n{int(btu):,} BTU'
 else:
     selected = matches.iloc[0]
     callout_title = str(selected['component']).upper()
     if selected['component'] == 'Air Separator':
-        callout_body = f"{selected['manufacturer']} {selected['model_number']}\\n{selected['pipe_size']} PIPE\\n{int(selected['min_btu']):,}–{int(selected['max_btu']):,} BTU"
+        callout_body = f"{selected['manufacturer']} {selected['model_number']}\n{selected['pipe_size']} PIPE\n{int(selected['min_btu']):,}–{int(selected['max_btu']):,} BTU"
     else:
-        callout_body = f"{selected['manufacturer']}\\n{selected['model_number']}\\n{selected['system_type']}\\n{int(selected['min_btu']):,}–{int(selected['max_btu']):,} BTU"
+        callout_body = f"{selected['manufacturer']}\n{selected['model_number']}\n{selected['system_type']}\n{int(selected['min_btu']):,}–{int(selected['max_btu']):,} BTU"
 
-if component == 'Expansion Tank':
-    callout_left, callout_top, pointer_width, pointer_height = '15.5%', '34.5%', '72px', '42px'
-else:
-    callout_left, callout_top, pointer_width, pointer_height = '37.5%', '12.5%', '90px', '48px'
-
+pos = COMPONENT_POSITIONS.get(component, COMPONENT_POSITIONS['Air Separator'])
 left, right = st.columns([1.65, 1])
 with left:
     if not DIAGRAM_GIF.exists():
@@ -93,13 +87,16 @@ with left:
         <style>
             .diagram-wrap {{ position: relative; width: 100%; background: #000; border: 1px solid #00cc44; box-shadow: 0 0 18px rgba(0,255,80,0.35); overflow: hidden; font-family: "Courier New", monospace; }}
             .diagram-wrap img {{ display: block; width: 100%; height: auto; }}
-            .callout {{ position: absolute; left: {callout_left}; top: {callout_top}; color: #39ff55; background: rgba(0,0,0,0.80); border: 1px solid #39ff55; padding: 8px 11px; line-height: 1.15; font-size: clamp(10px, 1.05vw, 16px); text-shadow: 0 0 7px #39ff55; box-shadow: 0 0 12px rgba(57,255,85,0.55); white-space: pre-line; max-width: 260px; }}
-            .callout::after {{ content: ""; position: absolute; left: 28px; top: 100%; width: {pointer_width}; height: {pointer_height}; border-left: 2px solid #39ff55; border-bottom: 2px solid #39ff55; transform: skewX(-28deg); filter: drop-shadow(0 0 4px #39ff55); }}
+            .component-highlight {{ position: absolute; left: {pos['highlight_left']}; top: {pos['highlight_top']}; width: {pos['highlight_size']}; height: {pos['highlight_size']}; border: 2px solid #39ff55; border-radius: 50%; box-shadow: 0 0 10px #39ff55, inset 0 0 10px rgba(57,255,85,0.35); animation: pulse 1.1s infinite; pointer-events: none; }}
+            @keyframes pulse {{ 0% {{ transform: scale(0.92); opacity: 0.45; }} 50% {{ transform: scale(1.15); opacity: 1.0; }} 100% {{ transform: scale(0.92); opacity: 0.45; }} }}
+            .callout {{ position: absolute; left: {pos['callout_left']}; top: {pos['callout_top']}; color: #39ff55; background: rgba(0,0,0,0.82); border: 1px solid #39ff55; padding: 8px 11px; line-height: 1.15; font-size: clamp(10px, 1.05vw, 16px); text-shadow: 0 0 7px #39ff55; box-shadow: 0 0 12px rgba(57,255,85,0.55); white-space: pre-line; max-width: 270px; }}
+            .callout::after {{ content: ""; position: absolute; left: 28px; top: 100%; width: {pos['pointer_width']}; height: {pos['pointer_height']}; border-left: 2px solid #39ff55; border-bottom: 2px solid #39ff55; transform: skewX(-28deg); filter: drop-shadow(0 0 4px #39ff55); }}
             .terminal-line {{ color: #8cff98; font-size: 0.85em; }}
         </style>
         <div class='diagram-wrap'>
             <img src='data:image/gif;base64,{gif64}' />
-            <div class='callout'><b>{callout_title}</b>\\n{callout_body}\\n<span class='terminal-line'>&gt; SELECTED BY BTU</span></div>
+            <div class='component-highlight'></div>
+            <div class='callout'><b>{callout_title}</b>\n{callout_body}\n<span class='terminal-line'>&gt; SELECTED BY BTU</span></div>
         </div>
         '''
         components.html(html, height=625, scrolling=False)
@@ -110,18 +107,12 @@ with right:
         st.warning(f'No match found for {component}, {manufacturer}, {int(btu):,} BTU.')
     else:
         st.success(f"{selected['manufacturer']} {selected['model_number']}")
-        lines = [
-            f"**Component:** {selected['component']}",
-            f"**Manufacturer:** {selected['manufacturer']}",
-            f"**Model #:** `{selected['model_number']}`",
-            f"**Part #:** `{selected['part_number']}`",
-            f"**BTU Range:** {int(selected['min_btu']):,} – {int(selected['max_btu']):,} BTU",
-        ]
+        lines = [f"**Component:** {selected['component']}", f"**Manufacturer:** {selected['manufacturer']}", f"**Model #:** `{selected['model_number']}`", f"**Part #:** `{selected['part_number']}`", f"**BTU Range:** {int(selected['min_btu']):,} – {int(selected['max_btu']):,} BTU"]
         if selected['component'] == 'Expansion Tank':
             lines.insert(2, f"**System Type:** {selected['system_type']}")
         else:
             lines.append(f"**Pipe Size:** {selected['pipe_size']}")
-        st.markdown('  \\n'.join(lines) + f"\\n\\n**Description:**  \\n{selected['description']}\\n\\n**Notes:**  \\n{selected['notes']}")
+        st.markdown('  \n'.join(lines) + f"\n\n**Description:**  \n{selected['description']}\n\n**Notes:**  \n{selected['notes']}")
         st.download_button('Download This Selection', data=matches.head(1).to_csv(index=False), file_name='selected_hydronic_component.csv', mime='text/csv')
 
 st.subheader('Available Ranges for Current Selection')
