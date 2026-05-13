@@ -16,31 +16,53 @@ def load_products():
 def image_to_base64(path: Path) -> str:
     return base64.b64encode(path.read_bytes()).decode('utf-8')
 
-def select_product(df, component, manufacturer, btu):
-    matches = df[(df['component'] == component) & (df['manufacturer'] == manufacturer) & (df['min_btu'] <= btu) & (df['max_btu'] >= btu)].copy()
+def select_product(df, component, manufacturer, btu, system_type=None):
+    filtered = df[(df['component'] == component) & (df['manufacturer'] == manufacturer)].copy()
+    if component == 'Expansion Tank':
+        filtered = filtered[filtered['system_type'] == system_type]
+    matches = filtered[(filtered['min_btu'] <= btu) & (filtered['max_btu'] >= btu)].copy()
     return matches.sort_values(['min_btu', 'max_btu'], ascending=[False, True])
+
+def current_ranges(df, component, manufacturer, system_type=None):
+    filtered = df[(df['component'] == component) & (df['manufacturer'] == manufacturer)].copy()
+    if component == 'Expansion Tank' and system_type:
+        filtered = filtered[filtered['system_type'] == system_type]
+    return filtered.sort_values(['system_type', 'min_btu'])
 
 products = load_products()
 st.title('HOT WATER HYDRONIC SYSTEM SELECTOR')
-st.caption('Demo: animated diagram + dynamic air separator callout')
+st.caption('Demo: animated diagram + dynamic component callout')
 
 with st.sidebar:
     st.header('System Inputs')
     component = st.selectbox('Component', sorted(products['component'].unique()))
     manufacturers = sorted(products.loc[products['component'] == component, 'manufacturer'].unique())
     manufacturer = st.selectbox('Manufacturer', manufacturers)
+    system_type = None
+    if component == 'Expansion Tank':
+        system_types = sorted(products.loc[(products['component'] == component) & (products['manufacturer'] == manufacturer), 'system_type'].unique())
+        system_type = st.selectbox('System Type', system_types)
+    else:
+        st.info('System Type is only required for Expansion Tank selections in this demo.')
     btu = st.number_input('BTU Capacity', min_value=0, max_value=5000000, value=120000, step=5000)
-    st.caption('For this first demo, only the Air Separator component has rules loaded.')
 
-matches = select_product(products, component, manufacturer, int(btu))
+matches = select_product(products, component, manufacturer, int(btu), system_type)
 if matches.empty:
     selected = None
-    callout_title = 'AIR SEPARATOR'
+    callout_title = component.upper()
     callout_body = f'NO MATCH\n{int(btu):,} BTU'
 else:
     selected = matches.iloc[0]
-    callout_title = 'AIR SEPARATOR'
-    callout_body = f"{selected['manufacturer']} {selected['model_number']}\n{selected['pipe_size']} PIPE\n{int(selected['min_btu']):,}–{int(selected['max_btu']):,} BTU"
+    callout_title = str(selected['component']).upper()
+    if selected['component'] == 'Air Separator':
+        callout_body = f"{selected['manufacturer']} {selected['model_number']}\n{selected['pipe_size']} PIPE\n{int(selected['min_btu']):,}–{int(selected['max_btu']):,} BTU"
+    else:
+        callout_body = f"{selected['manufacturer']}\n{selected['model_number']}\n{selected['system_type']}\n{int(selected['min_btu']):,}–{int(selected['max_btu']):,} BTU"
+
+if component == 'Expansion Tank':
+    callout_left, callout_top, pointer_width, pointer_height = '15.5%', '34.5%', '72px', '42px'
+else:
+    callout_left, callout_top, pointer_width, pointer_height = '37.5%', '12.5%', '90px', '48px'
 
 left, right = st.columns([1.65, 1])
 with left:
@@ -52,8 +74,8 @@ with left:
         <style>
             .diagram-wrap {{ position: relative; width: 100%; background: #000; border: 1px solid #00cc44; box-shadow: 0 0 18px rgba(0,255,80,0.35); overflow: hidden; font-family: "Courier New", monospace; }}
             .diagram-wrap img {{ display: block; width: 100%; height: auto; }}
-            .callout {{ position: absolute; left: 37.5%; top: 12.5%; color: #39ff55; background: rgba(0,0,0,0.78); border: 1px solid #39ff55; padding: 8px 11px; line-height: 1.15; font-size: clamp(11px, 1.15vw, 17px); text-shadow: 0 0 7px #39ff55; box-shadow: 0 0 12px rgba(57,255,85,0.55); white-space: pre-line; }}
-            .callout::after {{ content: ""; position: absolute; left: 28px; top: 100%; width: 90px; height: 48px; border-left: 2px solid #39ff55; border-bottom: 2px solid #39ff55; transform: skewX(-28deg); filter: drop-shadow(0 0 4px #39ff55); }}
+            .callout {{ position: absolute; left: {callout_left}; top: {callout_top}; color: #39ff55; background: rgba(0,0,0,0.80); border: 1px solid #39ff55; padding: 8px 11px; line-height: 1.15; font-size: clamp(10px, 1.05vw, 16px); text-shadow: 0 0 7px #39ff55; box-shadow: 0 0 12px rgba(57,255,85,0.55); white-space: pre-line; max-width: 260px; }}
+            .callout::after {{ content: ""; position: absolute; left: 28px; top: 100%; width: {pointer_width}; height: {pointer_height}; border-left: 2px solid #39ff55; border-bottom: 2px solid #39ff55; transform: skewX(-28deg); filter: drop-shadow(0 0 4px #39ff55); }}
             .terminal-line {{ color: #8cff98; font-size: 0.85em; }}
         </style>
         <div class='diagram-wrap'>
@@ -66,22 +88,23 @@ with left:
 with right:
     st.subheader('Recommendation')
     if selected is None:
-        st.warning(f'No match found for {int(btu):,} BTU.')
+        st.warning(f'No match found for {component}, {manufacturer}, {int(btu):,} BTU.')
     else:
         st.success(f"{selected['manufacturer']} {selected['model_number']}")
-        markdown_text = (
-            '**Component:** ' + str(selected['component']) + '  \n'
-            + '**Manufacturer:** ' + str(selected['manufacturer']) + '  \n'
-            + '**Model #:** `' + str(selected['model_number']) + '`  \n'
-            + '**Part #:** `' + str(selected['part_number']) + '`  \n'
-            + '**Pipe Size:** ' + str(selected['pipe_size']) + '  \n'
-            + '**Range:** ' + f"{int(selected['min_btu']):,} – {int(selected['max_btu']):,} BTU" + '  \n\n'
-            + '**Description:**  \n' + str(selected['description']) + '\n\n'
-            + '**Notes:**  \n' + str(selected['notes'])
-        )
-        st.markdown(markdown_text)
-        st.download_button('Download This Selection', data=matches.head(1).to_csv(index=False), file_name='selected_air_separator.csv', mime='text/csv')
+        lines = [
+            f"**Component:** {selected['component']}",
+            f"**Manufacturer:** {selected['manufacturer']}",
+            f"**Model #:** `{selected['model_number']}`",
+            f"**Part #:** `{selected['part_number']}`",
+            f"**BTU Range:** {int(selected['min_btu']):,} – {int(selected['max_btu']):,} BTU",
+        ]
+        if selected['component'] == 'Expansion Tank':
+            lines.insert(2, f"**System Type:** {selected['system_type']}")
+        else:
+            lines.append(f"**Pipe Size:** {selected['pipe_size']}")
+        st.markdown('  \n'.join(lines) + f"\n\n**Description:**  \n{selected['description']}\n\n**Notes:**  \n{selected['notes']}")
+        st.download_button('Download This Selection', data=matches.head(1).to_csv(index=False), file_name='selected_hydronic_component.csv', mime='text/csv')
 
-st.subheader('Available Air Separator Ranges')
-st.dataframe(products.sort_values(['component', 'manufacturer', 'min_btu']), use_container_width=True, hide_index=True)
+st.subheader('Available Ranges for Current Selection')
+st.dataframe(current_ranges(products, component, manufacturer, system_type), use_container_width=True, hide_index=True)
 st.caption('Demo only. Final component selections should be verified against manufacturer submittals, flow rate, pressure drop, temperature, system pressure, code requirements, and project conditions.')
