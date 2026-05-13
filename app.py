@@ -9,16 +9,34 @@ st.set_page_config(page_title='Hydronic Selector Demo', layout='wide', initial_s
 DATABASE_FILE = Path('hydronic_parts_database.csv')
 DIAGRAM_GIF = Path('hot_water_hydronic_system_selector_demo.gif')
 
+REQUIRED_COLUMNS = {
+    'component': '', 'manufacturer': '', 'system_type': 'Any', 'min_btu': 0, 'max_btu': 0,
+    'pipe_size': 'N/A', 'model_number': '', 'part_number': '', 'description': '', 'notes': ''
+}
+
 @st.cache_data
 def load_products():
-    return pd.read_csv(DATABASE_FILE)
+    df = pd.read_csv(DATABASE_FILE)
+    for col, default in REQUIRED_COLUMNS.items():
+        if col not in df.columns:
+            df[col] = default
+    df['system_type'] = df['system_type'].fillna('Any')
+    df['pipe_size'] = df['pipe_size'].fillna('N/A')
+    df['part_number'] = df['part_number'].fillna(df['model_number'])
+    df['min_btu'] = pd.to_numeric(df['min_btu'], errors='coerce').fillna(0).astype(int)
+    df['max_btu'] = pd.to_numeric(df['max_btu'], errors='coerce').fillna(0).astype(int)
+    return df
 
 def image_to_base64(path: Path) -> str:
     return base64.b64encode(path.read_bytes()).decode('utf-8')
 
+def safe_sort(df, preferred_cols):
+    sort_cols = [c for c in preferred_cols if c in df.columns]
+    return df.sort_values(sort_cols) if sort_cols else df
+
 def select_product(df, component, manufacturer, btu, system_type=None):
     filtered = df[(df['component'] == component) & (df['manufacturer'] == manufacturer)].copy()
-    if component == 'Expansion Tank':
+    if component == 'Expansion Tank' and system_type:
         filtered = filtered[filtered['system_type'] == system_type]
     matches = filtered[(filtered['min_btu'] <= btu) & (filtered['max_btu'] >= btu)].copy()
     return matches.sort_values(['min_btu', 'max_btu'], ascending=[False, True])
@@ -27,7 +45,7 @@ def current_ranges(df, component, manufacturer, system_type=None):
     filtered = df[(df['component'] == component) & (df['manufacturer'] == manufacturer)].copy()
     if component == 'Expansion Tank' and system_type:
         filtered = filtered[filtered['system_type'] == system_type]
-    return filtered.sort_values(['system_type', 'min_btu'])
+    return safe_sort(filtered, ['system_type', 'min_btu'])
 
 products = load_products()
 st.title('HOT WATER HYDRONIC SYSTEM SELECTOR')
@@ -35,12 +53,13 @@ st.caption('Demo: animated diagram + dynamic component callout')
 
 with st.sidebar:
     st.header('System Inputs')
-    component = st.selectbox('Component', sorted(products['component'].unique()))
-    manufacturers = sorted(products.loc[products['component'] == component, 'manufacturer'].unique())
+    component = st.selectbox('Component', sorted(products['component'].dropna().unique()))
+    manufacturers = sorted(products.loc[products['component'] == component, 'manufacturer'].dropna().unique())
     manufacturer = st.selectbox('Manufacturer', manufacturers)
     system_type = None
     if component == 'Expansion Tank':
-        system_types = sorted(products.loc[(products['component'] == component) & (products['manufacturer'] == manufacturer), 'system_type'].unique())
+        system_types = sorted(products.loc[(products['component'] == component) & (products['manufacturer'] == manufacturer), 'system_type'].dropna().unique())
+        system_types = [s for s in system_types if s != 'Any'] or ['Any']
         system_type = st.selectbox('System Type', system_types)
     else:
         st.info('System Type is only required for Expansion Tank selections in this demo.')
@@ -50,14 +69,14 @@ matches = select_product(products, component, manufacturer, int(btu), system_typ
 if matches.empty:
     selected = None
     callout_title = component.upper()
-    callout_body = f'NO MATCH\n{int(btu):,} BTU'
+    callout_body = f'NO MATCH\\n{int(btu):,} BTU'
 else:
     selected = matches.iloc[0]
     callout_title = str(selected['component']).upper()
     if selected['component'] == 'Air Separator':
-        callout_body = f"{selected['manufacturer']} {selected['model_number']}\n{selected['pipe_size']} PIPE\n{int(selected['min_btu']):,}–{int(selected['max_btu']):,} BTU"
+        callout_body = f"{selected['manufacturer']} {selected['model_number']}\\n{selected['pipe_size']} PIPE\\n{int(selected['min_btu']):,}–{int(selected['max_btu']):,} BTU"
     else:
-        callout_body = f"{selected['manufacturer']}\n{selected['model_number']}\n{selected['system_type']}\n{int(selected['min_btu']):,}–{int(selected['max_btu']):,} BTU"
+        callout_body = f"{selected['manufacturer']}\\n{selected['model_number']}\\n{selected['system_type']}\\n{int(selected['min_btu']):,}–{int(selected['max_btu']):,} BTU"
 
 if component == 'Expansion Tank':
     callout_left, callout_top, pointer_width, pointer_height = '15.5%', '34.5%', '72px', '42px'
@@ -67,7 +86,7 @@ else:
 left, right = st.columns([1.65, 1])
 with left:
     if not DIAGRAM_GIF.exists():
-        st.error('Diagram GIF is missing. Make sure hot_water_hydronic_system_selector_demo.gif is in the app folder.')
+        st.warning('Diagram GIF is missing. The selector will still work, but the animated diagram will not display until hot_water_hydronic_system_selector_demo.gif is added to the app folder.')
     else:
         gif64 = image_to_base64(DIAGRAM_GIF)
         html = f'''
@@ -80,7 +99,7 @@ with left:
         </style>
         <div class='diagram-wrap'>
             <img src='data:image/gif;base64,{gif64}' />
-            <div class='callout'><b>{callout_title}</b>\n{callout_body}\n<span class='terminal-line'>&gt; SELECTED BY BTU</span></div>
+            <div class='callout'><b>{callout_title}</b>\\n{callout_body}\\n<span class='terminal-line'>&gt; SELECTED BY BTU</span></div>
         </div>
         '''
         components.html(html, height=625, scrolling=False)
@@ -102,7 +121,7 @@ with right:
             lines.insert(2, f"**System Type:** {selected['system_type']}")
         else:
             lines.append(f"**Pipe Size:** {selected['pipe_size']}")
-        st.markdown('  \n'.join(lines) + f"\n\n**Description:**  \n{selected['description']}\n\n**Notes:**  \n{selected['notes']}")
+        st.markdown('  \\n'.join(lines) + f"\\n\\n**Description:**  \\n{selected['description']}\\n\\n**Notes:**  \\n{selected['notes']}")
         st.download_button('Download This Selection', data=matches.head(1).to_csv(index=False), file_name='selected_hydronic_component.csv', mime='text/csv')
 
 st.subheader('Available Ranges for Current Selection')
