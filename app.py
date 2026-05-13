@@ -10,9 +10,18 @@ DATABASE_FILE = Path('hydronic_parts_database.csv')
 DIAGRAM_GIF = Path('hot_water_hydronic_system_selector_demo.gif')
 
 REQUIRED_COLUMNS = {'component':'','manufacturer':'','system_type':'Any','min_btu':0,'max_btu':0,'pipe_size':'N/A','model_number':'','part_number':'','description':'','notes':''}
+
+# Adjust these percentages to fine-tune the highlight/callout placement.
+# The highlight positions below are intentionally CSS overlays, not baked into the GIF.
 COMPONENT_POSITIONS = {
-    'Air Separator': {'callout_left':'37.5%','callout_top':'12.5%','highlight_left':'39.2%','highlight_top':'28.0%','highlight_size':'46px','pointer_width':'90px','pointer_height':'48px'},
-    'Expansion Tank': {'callout_left':'14.0%','callout_top':'35.0%','highlight_left':'21.5%','highlight_top':'43.0%','highlight_size':'58px','pointer_width':'78px','pointer_height':'42px'},
+    'Air Separator': {
+        'callout_left':'38.0%', 'callout_top':'12.0%',
+        'highlight_left':'40.6%', 'highlight_top':'28.6%', 'highlight_size':'44px'
+    },
+    'Expansion Tank': {
+        'callout_left':'20.0%', 'callout_top':'34.5%',
+        'highlight_left':'29.0%', 'highlight_top':'43.0%', 'highlight_size':'64px'
+    },
 }
 
 @st.cache_data
@@ -89,8 +98,7 @@ with left:
             .diagram-wrap img {{ display: block; width: 100%; height: auto; }}
             .component-highlight {{ position: absolute; left: {pos['highlight_left']}; top: {pos['highlight_top']}; width: {pos['highlight_size']}; height: {pos['highlight_size']}; border: 2px solid #39ff55; border-radius: 50%; box-shadow: 0 0 10px #39ff55, inset 0 0 10px rgba(57,255,85,0.35); animation: pulse 1.1s infinite; pointer-events: none; }}
             @keyframes pulse {{ 0% {{ transform: scale(0.92); opacity: 0.45; }} 50% {{ transform: scale(1.15); opacity: 1.0; }} 100% {{ transform: scale(0.92); opacity: 0.45; }} }}
-            .callout {{ position: absolute; left: {pos['callout_left']}; top: {pos['callout_top']}; color: #39ff55; background: rgba(0,0,0,0.82); border: 1px solid #39ff55; padding: 8px 11px; line-height: 1.15; font-size: clamp(10px, 1.05vw, 16px); text-shadow: 0 0 7px #39ff55; box-shadow: 0 0 12px rgba(57,255,85,0.55); white-space: pre-line; max-width: 270px; }}
-            .callout::after {{ content: ""; position: absolute; left: 28px; top: 100%; width: {pos['pointer_width']}; height: {pos['pointer_height']}; border-left: 2px solid #39ff55; border-bottom: 2px solid #39ff55; transform: skewX(-28deg); filter: drop-shadow(0 0 4px #39ff55); }}
+            .callout {{ position: absolute; left: {pos['callout_left']}; top: {pos['callout_top']}; color: #39ff55; background: rgba(0,0,0,0.84); border: 1px solid #39ff55; padding: 8px 11px; line-height: 1.15; font-size: clamp(10px, 1.05vw, 16px); text-shadow: 0 0 7px #39ff55; box-shadow: 0 0 12px rgba(57,255,85,0.55); white-space: pre-line; max-width: 285px; }}
             .terminal-line {{ color: #8cff98; font-size: 0.85em; }}
         </style>
         <div class='diagram-wrap'>
