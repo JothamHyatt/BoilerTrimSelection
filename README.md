@@ -1,11 +1,11 @@
 # Hydronic Selector Demo - Streamlit
 
-Highlight/callout placement update:
+SVG overlay highlight update:
 
-- Expansion Tank highlight moved substantially to the right.
-- Air Separator highlight nudged slightly right/down.
-- Removed the angled pointer line that appeared near the Air Separator/Air Eliminator callout.
-- Highlight circle is now the only locator marker, so there should be no strange diagonal artifact.
+- Replaced percentage/top-left CSS circles with SVG center-based circles.
+- Circle coordinates now scale with the image viewBox, so the circle should stay over the selected item.
+- Added optional sidebar calibration controls to fine-tune circle center/radius and callout location live.
+- Removed angled pointer artifacts.
 
 Replace these files in the repo:
 

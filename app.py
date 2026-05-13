@@ -8,20 +8,15 @@ import streamlit.components.v1 as components
 st.set_page_config(page_title='Hydronic Selector Demo', layout='wide', initial_sidebar_state='expanded')
 DATABASE_FILE = Path('hydronic_parts_database.csv')
 DIAGRAM_GIF = Path('hot_water_hydronic_system_selector_demo.gif')
+IMG_W = 980
+IMG_H = 586
 
 REQUIRED_COLUMNS = {'component':'','manufacturer':'','system_type':'Any','min_btu':0,'max_btu':0,'pipe_size':'N/A','model_number':'','part_number':'','description':'','notes':''}
 
-# Adjust these percentages to fine-tune the highlight/callout placement.
-# The highlight positions below are intentionally CSS overlays, not baked into the GIF.
+# SVG center coordinates in image pixels. These scale with the diagram image.
 COMPONENT_POSITIONS = {
-    'Air Separator': {
-        'callout_left':'38.0%', 'callout_top':'12.0%',
-        'highlight_left':'40.6%', 'highlight_top':'28.6%', 'highlight_size':'44px'
-    },
-    'Expansion Tank': {
-        'callout_left':'20.0%', 'callout_top':'34.5%',
-        'highlight_left':'29.0%', 'highlight_top':'43.0%', 'highlight_size':'64px'
-    },
+    'Air Separator': {'cx': 395, 'cy': 209, 'r': 31, 'callout_x': 410, 'callout_y': 72},
+    'Expansion Tank': {'cx': 468, 'cy': 285, 'r': 45, 'callout_x': 250, 'callout_y': 250},
 }
 
 @st.cache_data
@@ -72,6 +67,9 @@ with st.sidebar:
         st.info('System Type is only required for Expansion Tank selections in this demo.')
     btu = st.number_input('BTU Capacity', min_value=0, max_value=5000000, value=120000, step=5000)
 
+    st.divider()
+    calibration_mode = st.checkbox('Show highlight calibration controls', value=False)
+
 matches = select_product(products, component, manufacturer, int(btu), system_type)
 if matches.empty:
     selected = None
@@ -85,7 +83,18 @@ else:
     else:
         callout_body = f"{selected['manufacturer']}\n{selected['model_number']}\n{selected['system_type']}\n{int(selected['min_btu']):,}–{int(selected['max_btu']):,} BTU"
 
-pos = COMPONENT_POSITIONS.get(component, COMPONENT_POSITIONS['Air Separator'])
+pos = COMPONENT_POSITIONS.get(component, COMPONENT_POSITIONS['Air Separator']).copy()
+
+if calibration_mode:
+    with st.sidebar:
+        st.subheader('Highlight Calibration')
+        pos['cx'] = st.slider('Circle center X', 0, IMG_W, int(pos['cx']))
+        pos['cy'] = st.slider('Circle center Y', 0, IMG_H, int(pos['cy']))
+        pos['r'] = st.slider('Circle radius', 10, 120, int(pos['r']))
+        pos['callout_x'] = st.slider('Callout X', 0, IMG_W, int(pos['callout_x']))
+        pos['callout_y'] = st.slider('Callout Y', 0, IMG_H, int(pos['callout_y']))
+        st.code(f"'{component}': {{'cx': {pos['cx']}, 'cy': {pos['cy']}, 'r': {pos['r']}, 'callout_x': {pos['callout_x']}, 'callout_y': {pos['callout_y']}}}")
+
 left, right = st.columns([1.65, 1])
 with left:
     if not DIAGRAM_GIF.exists():
@@ -96,15 +105,18 @@ with left:
         <style>
             .diagram-wrap {{ position: relative; width: 100%; background: #000; border: 1px solid #00cc44; box-shadow: 0 0 18px rgba(0,255,80,0.35); overflow: hidden; font-family: "Courier New", monospace; }}
             .diagram-wrap img {{ display: block; width: 100%; height: auto; }}
-            .component-highlight {{ position: absolute; left: {pos['highlight_left']}; top: {pos['highlight_top']}; width: {pos['highlight_size']}; height: {pos['highlight_size']}; border: 2px solid #39ff55; border-radius: 50%; box-shadow: 0 0 10px #39ff55, inset 0 0 10px rgba(57,255,85,0.35); animation: pulse 1.1s infinite; pointer-events: none; }}
-            @keyframes pulse {{ 0% {{ transform: scale(0.92); opacity: 0.45; }} 50% {{ transform: scale(1.15); opacity: 1.0; }} 100% {{ transform: scale(0.92); opacity: 0.45; }} }}
-            .callout {{ position: absolute; left: {pos['callout_left']}; top: {pos['callout_top']}; color: #39ff55; background: rgba(0,0,0,0.84); border: 1px solid #39ff55; padding: 8px 11px; line-height: 1.15; font-size: clamp(10px, 1.05vw, 16px); text-shadow: 0 0 7px #39ff55; box-shadow: 0 0 12px rgba(57,255,85,0.55); white-space: pre-line; max-width: 285px; }}
+            .overlay {{ position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }}
+            .pulse-ring {{ fill: none; stroke: #39ff55; stroke-width: 3; filter: drop-shadow(0 0 5px #39ff55); animation: pulseStroke 1.1s infinite; transform-origin: center; }}
+            @keyframes pulseStroke {{ 0% {{ opacity: 0.45; stroke-width: 2; }} 50% {{ opacity: 1.0; stroke-width: 5; }} 100% {{ opacity: 0.45; stroke-width: 2; }} }}
+            .callout-box {{ position: absolute; left: {pos['callout_x'] / IMG_W * 100:.3f}%; top: {pos['callout_y'] / IMG_H * 100:.3f}%; color: #39ff55; background: rgba(0,0,0,0.84); border: 1px solid #39ff55; padding: 8px 11px; line-height: 1.15; font-size: clamp(10px, 1.05vw, 16px); text-shadow: 0 0 7px #39ff55; box-shadow: 0 0 12px rgba(57,255,85,0.55); white-space: pre-line; max-width: 285px; }}
             .terminal-line {{ color: #8cff98; font-size: 0.85em; }}
         </style>
         <div class='diagram-wrap'>
             <img src='data:image/gif;base64,{gif64}' />
-            <div class='component-highlight'></div>
-            <div class='callout'><b>{callout_title}</b>\n{callout_body}\n<span class='terminal-line'>&gt; SELECTED BY BTU</span></div>
+            <svg class='overlay' viewBox='0 0 {IMG_W} {IMG_H}' preserveAspectRatio='none'>
+                <circle class='pulse-ring' cx='{pos['cx']}' cy='{pos['cy']}' r='{pos['r']}' />
+            </svg>
+            <div class='callout-box'><b>{callout_title}</b>\n{callout_body}\n<span class='terminal-line'>&gt; SELECTED BY BTU</span></div>
         </div>
         '''
         components.html(html, height=625, scrolling=False)
