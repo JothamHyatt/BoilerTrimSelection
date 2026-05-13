@@ -1,11 +1,11 @@
 # Hydronic Selector Demo - Streamlit
 
-SVG overlay highlight update:
+Expansion tank highlight correction:
 
-- Replaced percentage/top-left CSS circles with SVG center-based circles.
-- Circle coordinates now scale with the image viewBox, so the circle should stay over the selected item.
-- Added optional sidebar calibration controls to fine-tune circle center/radius and callout location live.
-- Removed angled pointer artifacts.
+- Expansion Tank circle is now centered on the round tank body directly below the air separator.
+- The GIF and the highlight circle are now rendered in the same SVG coordinate system, preventing scaling drift.
+- The circle no longer targets the leader arrow next to the tank.
+- Calibration controls remain available in the sidebar for fine-tuning.
 
 Replace these files in the repo:
 

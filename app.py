@@ -13,10 +13,12 @@ IMG_H = 586
 
 REQUIRED_COLUMNS = {'component':'','manufacturer':'','system_type':'Any','min_btu':0,'max_btu':0,'pipe_size':'N/A','model_number':'','part_number':'','description':'','notes':''}
 
-# SVG center coordinates in image pixels. These scale with the diagram image.
+# These are center-point coordinates in the resized 980 x 586 diagram.
+# Expansion tank is intentionally centered below the air separator on the round tank body,
+# not on the arrow/leader next to the tank.
 COMPONENT_POSITIONS = {
-    'Air Separator': {'cx': 395, 'cy': 209, 'r': 31, 'callout_x': 410, 'callout_y': 72},
-    'Expansion Tank': {'cx': 468, 'cy': 285, 'r': 45, 'callout_x': 250, 'callout_y': 250},
+    'Air Separator': {'cx': 395, 'cy': 210, 'r': 30, 'callout_x': 410, 'callout_y': 70},
+    'Expansion Tank': {'cx': 395, 'cy': 285, 'r': 42, 'callout_x': 235, 'callout_y': 240},
 }
 
 @st.cache_data
@@ -103,20 +105,21 @@ with left:
         gif64 = image_to_base64(DIAGRAM_GIF)
         html = f'''
         <style>
-            .diagram-wrap {{ position: relative; width: 100%; background: #000; border: 1px solid #00cc44; box-shadow: 0 0 18px rgba(0,255,80,0.35); overflow: hidden; font-family: "Courier New", monospace; }}
-            .diagram-wrap img {{ display: block; width: 100%; height: auto; }}
-            .overlay {{ position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }}
-            .pulse-ring {{ fill: none; stroke: #39ff55; stroke-width: 3; filter: drop-shadow(0 0 5px #39ff55); animation: pulseStroke 1.1s infinite; transform-origin: center; }}
+            .diagram-wrap {{ width: 100%; background: #000; border: 1px solid #00cc44; box-shadow: 0 0 18px rgba(0,255,80,0.35); font-family: "Courier New", monospace; }}
+            .diagram-svg {{ display: block; width: 100%; height: auto; }}
+            .pulse-ring {{ fill: none; stroke: #39ff55; stroke-width: 3; filter: drop-shadow(0 0 5px #39ff55); animation: pulseStroke 1.1s infinite; }}
             @keyframes pulseStroke {{ 0% {{ opacity: 0.45; stroke-width: 2; }} 50% {{ opacity: 1.0; stroke-width: 5; }} 100% {{ opacity: 0.45; stroke-width: 2; }} }}
-            .callout-box {{ position: absolute; left: {pos['callout_x'] / IMG_W * 100:.3f}%; top: {pos['callout_y'] / IMG_H * 100:.3f}%; color: #39ff55; background: rgba(0,0,0,0.84); border: 1px solid #39ff55; padding: 8px 11px; line-height: 1.15; font-size: clamp(10px, 1.05vw, 16px); text-shadow: 0 0 7px #39ff55; box-shadow: 0 0 12px rgba(57,255,85,0.55); white-space: pre-line; max-width: 285px; }}
+            .callout-html {{ color: #39ff55; background: rgba(0,0,0,0.84); border: 1px solid #39ff55; padding: 8px 11px; line-height: 1.15; font-size: 15px; text-shadow: 0 0 7px #39ff55; box-shadow: 0 0 12px rgba(57,255,85,0.55); white-space: pre-line; max-width: 285px; }}
             .terminal-line {{ color: #8cff98; font-size: 0.85em; }}
         </style>
         <div class='diagram-wrap'>
-            <img src='data:image/gif;base64,{gif64}' />
-            <svg class='overlay' viewBox='0 0 {IMG_W} {IMG_H}' preserveAspectRatio='none'>
+            <svg class='diagram-svg' viewBox='0 0 {IMG_W} {IMG_H}' preserveAspectRatio='xMidYMid meet'>
+                <image href='data:image/gif;base64,{gif64}' x='0' y='0' width='{IMG_W}' height='{IMG_H}' />
                 <circle class='pulse-ring' cx='{pos['cx']}' cy='{pos['cy']}' r='{pos['r']}' />
+                <foreignObject x='{pos['callout_x']}' y='{pos['callout_y']}' width='320' height='160'>
+                    <div xmlns='http://www.w3.org/1999/xhtml' class='callout-html'><b>{callout_title}</b>\n{callout_body}\n<span class='terminal-line'>&gt; SELECTED BY BTU</span></div>
+                </foreignObject>
             </svg>
-            <div class='callout-box'><b>{callout_title}</b>\n{callout_body}\n<span class='terminal-line'>&gt; SELECTED BY BTU</span></div>
         </div>
         '''
         components.html(html, height=625, scrolling=False)
