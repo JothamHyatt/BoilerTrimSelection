@@ -1,18 +1,22 @@
 # Hydronic Selector Demo - Streamlit
 
-Pump Isolation Flanges pipe size update:
+Pipe size display fix only.
 
-- Adds pipe sizes to all Pump Isolation Flange selections.
-- Press, Sweat, and Threaded use the same BTU-to-pipe-size map:
-  - 0–40,000 BTU: 3/4 inch
-  - 40,000–80,000 BTU: 1 inch
-  - 80,000–140,000 BTU: 1-1/4 inch
-  - 140,000–250,000 BTU: 1-1/2 inch
-  - 250,000–400,000 BTU: 2 inch
-- The selected equipment breakdown and highlighted card now show pipe size for flanges.
+## What changed
 
-Replace these files in the repo:
+- `hydronic_parts_database.csv` includes pipe sizes for all Pump Isolation Flange selections.
+- `app.py` displays `Pipe Size` in:
+  - Selected Equipment Breakdown
+  - Highlighted Selection
+  - Detailed Component Cards
+  - CSV export
+- The app still uses your existing `hot_water_hydronic_system_selector_demo.gif` and does **not** overwrite or regenerate the GIF.
+
+## Deployment
+
+Replace only:
 
 - `app.py`
 - `hydronic_parts_database.csv`
-- `hot_water_hydronic_system_selector_demo.gif`
+
+Keep your existing green monochrome GIF in place.

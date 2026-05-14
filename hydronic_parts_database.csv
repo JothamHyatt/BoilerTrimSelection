@@ -1,6 +1,6 @@
 component,manufacturer,system_type,connection_type,min_btu,max_btu,pipe_size,quantity,model_number,part_number,description,notes
 Air Separator,Resideo,Any,Any,0,80000,"1""",1,HPV100,HPV100,"Resideo HPV100 air separator, 1"" connection.",Verify final selection against manufacturer submittal and project requirements.
-Air Separator,Resideo,Any,Any,80000,140000,"1-1/4""",1,HPV125,HPV125,"Resideo HPV125 air separator, 1-1/4"" connection.",Boundary values prefer the higher BTU range in this demo.
+Air Separator,Resideo,Any,Any,80000,140000,"1-1/4""",1,HPV125,HPV125,"Resideo HPV125 air separator, 1-1/4"" connection.",Verify final selection against manufacturer submittal and project requirements.
 Air Separator,Resideo,Any,Any,140000,250000,"1-1/2""",1,HPV150,HPV150,"Resideo HPV150 air separator, 1-1/2"" connection.",Verify final selection against manufacturer submittal and project requirements.
 Air Separator,Resideo,Any,Any,250000,450000,"2""",1,HPV200,HPV200,"Resideo HPV200 air separator, 2"" connection.",Verify final selection against manufacturer submittal and project requirements.
 Expansion Tank,Proselect / Amtrol,Copper Baseboard/Radiant,Any,0,150000,N/A,1,PSHT30,PSHT30,"Expansion tank selection for Copper Baseboard/Radiant systems, 0–150,000 BTU.",Verify final selection against manufacturer submittal and project requirements.
