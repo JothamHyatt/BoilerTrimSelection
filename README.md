@@ -1,11 +1,11 @@
 # Hydronic Selector Demo - Streamlit
 
-Equipment breakdown update:
+Pump Isolation Flanges update:
 
-- Adds a `Selected Equipment Breakdown` section below the animation.
-- Shows all currently selected components based on BTU and expansion tank system type.
-- Adds detailed component cards below the table.
-- Adds a CSV download button for the selected equipment list.
+- Adds `Pump Isolation Flanges` as a new equipment type.
+- Adds a `Pump Isolation Flange Connection Type` dropdown with Press, Sweat, and Threaded.
+- Adds quantity `[2]` for pump isolation flange selections.
+- Adds Pump Isolation Flanges to the selected equipment breakdown and detailed cards.
 - Keeps the SVG highlight and calibration controls.
 
 Replace these files in the repo:
