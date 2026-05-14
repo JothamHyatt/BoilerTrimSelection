@@ -1,12 +1,15 @@
 # Hydronic Selector Demo - Streamlit
 
-Pump Isolation Flanges update:
+Pump Isolation Flanges pipe size update:
 
-- Adds `Pump Isolation Flanges` as a new equipment type.
-- Adds a `Pump Isolation Flange Connection Type` dropdown with Press, Sweat, and Threaded.
-- Adds quantity `[2]` for pump isolation flange selections.
-- Adds Pump Isolation Flanges to the selected equipment breakdown and detailed cards.
-- Keeps the SVG highlight and calibration controls.
+- Adds pipe sizes to all Pump Isolation Flange selections.
+- Press, Sweat, and Threaded use the same BTU-to-pipe-size map:
+  - 0–40,000 BTU: 3/4 inch
+  - 40,000–80,000 BTU: 1 inch
+  - 80,000–140,000 BTU: 1-1/4 inch
+  - 140,000–250,000 BTU: 1-1/2 inch
+  - 250,000–400,000 BTU: 2 inch
+- The selected equipment breakdown and highlighted card now show pipe size for flanges.
 
 Replace these files in the repo:
 

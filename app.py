@@ -100,7 +100,7 @@ else:
     elif selected['component'] == 'Expansion Tank':
         callout_body = f"{selected['manufacturer']}\n{selected['model_number']}\n{selected['system_type']}\n{int(selected['min_btu']):,}–{int(selected['max_btu']):,} BTU"
     else:
-        callout_body = f"QTY {int(selected['quantity'])}\n{selected['manufacturer']} {selected['model_number']}\n{selected['connection_type']}\n{int(selected['min_btu']):,}–{int(selected['max_btu']):,} BTU"
+        callout_body = f"QTY {int(selected['quantity'])}\n{selected['manufacturer']} {selected['model_number']}\n{selected['connection_type']} / {selected['pipe_size']} PIPE\n{int(selected['min_btu']):,}–{int(selected['max_btu']):,} BTU"
 
 pos = COMPONENT_POSITIONS.get(highlighted_component, COMPONENT_POSITIONS['Air Separator']).copy()
 if calibration_mode:
@@ -119,25 +119,27 @@ with left:
         st.warning('Diagram GIF is missing. The selector will still work, but the animated diagram will not display until hot_water_hydronic_system_selector_demo.gif is added to the app folder.')
     else:
         gif64 = image_to_base64(DIAGRAM_GIF)
-        html = f"""
+        html = f'''
         <style>
-            .diagram-wrap {{ width: 100%; background: #000; border: 1px solid #00cc44; box-shadow: 0 0 18px rgba(0,255,80,0.35); font-family: 'Courier New', monospace; }}
+            .diagram-wrap {{ width: 100%; background: #000; border: 1px solid #00cc44; box-shadow: 0 0 18px rgba(0,255,80,0.35); font-family: "Courier New", monospace; }}
             .diagram-svg {{ display: block; width: 100%; height: auto; }}
             .pulse-ring {{ fill: none; stroke: #39ff55; stroke-width: 3; filter: drop-shadow(0 0 5px #39ff55); animation: pulseStroke 1.1s infinite; }}
             @keyframes pulseStroke {{ 0% {{ opacity: 0.45; stroke-width: 2; }} 50% {{ opacity: 1.0; stroke-width: 5; }} 100% {{ opacity: 0.45; stroke-width: 2; }} }}
-            .callout-html {{ color: #39ff55; background: rgba(0,0,0,0.84); border: 1px solid #39ff55; padding: 8px 11px; line-height: 1.15; font-size: 15px; text-shadow: 0 0 7px #39ff55; box-shadow: 0 0 12px rgba(57,255,85,0.55); white-space: pre-line; max-width: 285px; }}
+            .callout-html {{ color: #39ff55; background: rgba(0,0,0,0.84); border: 1px solid #39ff55; padding: 8px 11px; line-height: 1.15; font-size: 15px; text-shadow: 0 0 7px #39ff55; box-shadow: 0 0 12px rgba(57,255,85,0.55); white-space: pre-line; max-width: 300px; }}
             .terminal-line {{ color: #8cff98; font-size: 0.85em; }}
         </style>
         <div class='diagram-wrap'>
             <svg class='diagram-svg' viewBox='0 0 {IMG_W} {IMG_H}' preserveAspectRatio='xMidYMid meet'>
                 <image href='data:image/gif;base64,{gif64}' x='0' y='0' width='{IMG_W}' height='{IMG_H}' />
                 <circle class='pulse-ring' cx='{pos['cx']}' cy='{pos['cy']}' r='{pos['r']}' />
-                <foreignObject x='{pos['callout_x']}' y='{pos['callout_y']}' width='340' height='170'>
-                    <div xmlns='http://www.w3.org/1999/xhtml' class='callout-html'><b>{callout_title}</b>\n{callout_body}\n<span class='terminal-line'>&gt; SELECTED BY BTU</span></div>
+                <foreignObject x='{pos['callout_x']}' y='{pos['callout_y']}' width='360' height='180'>
+                    <div xmlns='http://www.w3.org/1999/xhtml' class='callout-html'><b>{callout_title}</b>
+{callout_body}
+<span class='terminal-line'>&gt; SELECTED BY BTU</span></div>
                 </foreignObject>
             </svg>
         </div>
-        """
+        '''
         components.html(html, height=625, scrolling=False)
 
 with right:
@@ -151,6 +153,7 @@ with right:
             lines.insert(3, f"**System Type:** {selected['system_type']}")
         if selected['component'] == 'Pump Isolation Flanges':
             lines.insert(3, f"**Connection Type:** {selected['connection_type']}")
+            lines.insert(4, f"**Pipe Size:** {selected['pipe_size']}")
         if selected['component'] == 'Air Separator':
             lines.append(f"**Pipe Size:** {selected['pipe_size']}")
         st.markdown('  \n'.join(lines) + f"\n\n**Description:**  \n{selected['description']}")
