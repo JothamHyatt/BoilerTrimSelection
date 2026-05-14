@@ -10,31 +10,119 @@ DATABASE_FILE = Path('hydronic_parts_database.csv')
 DIAGRAM_GIF = Path('hot_water_hydronic_system_selector_demo.gif')
 IMG_W = 980
 IMG_H = 586
-REQUIRED_COLUMNS = {'component':'','manufacturer':'','system_type':'Any','connection_type':'Any','min_btu':0,'max_btu':0,'pipe_size':'N/A','quantity':1,'model_number':'','part_number':'','description':'','notes':''}
+
+REQUIRED_COLUMNS = {
+    'component':'','manufacturer':'','system_type':'Any','connection_type':'Any',
+    'min_btu':0,'max_btu':0,'pipe_size':'N/A','quantity':1,
+    'model_number':'','part_number':'','description':'','notes':''
+}
 COMPONENT_POSITIONS = {
     'Air Separator': {'cx':395, 'cy':210, 'r':30, 'callout_x':410, 'callout_y':70},
     'Expansion Tank': {'cx':395, 'cy':285, 'r':42, 'callout_x':235, 'callout_y':240},
+    # Patch applied: moved onto the right-hand end of the circulator symbol.
     'Pump Isolation Flanges': {'cx':312, 'cy':230, 'r':24, 'callout_x':120, 'callout_y':115},
 }
 COMPONENT_ORDER = ['Air Separator', 'Expansion Tank', 'Pump Isolation Flanges']
 
 APPLE_II_CSS = '''
 <style>
-.stApp { background: radial-gradient(circle at 50% 10%, #061806 0%, #020802 45%, #000 100%); }
-section[data-testid="stSidebar"] { background:#000 !important; border-right:1px solid #39ff55; box-shadow:0 0 18px rgba(57,255,85,.25); }
-section[data-testid="stSidebar"] *, .stSelectbox label, .stNumberInput label, .stCheckbox label, h1, h2, h3, .stCaptionContainer { font-family:"Courier New", monospace !important; color:#39ff55 !important; text-shadow:0 0 7px rgba(57,255,85,.8); }
-div[data-baseweb="select"] > div, div[data-baseweb="input"] > div, .stNumberInput input { background:#000 !important; color:#39ff55 !important; border:1px solid #39ff55 !important; border-radius:0 !important; box-shadow:inset 0 0 10px rgba(57,255,85,.18), 0 0 8px rgba(57,255,85,.22) !important; font-family:"Courier New", monospace !important; }
-div[data-baseweb="select"] span, div[data-baseweb="select"] input, div[data-baseweb="input"] input, .stNumberInput input { color:#39ff55 !important; -webkit-text-fill-color:#39ff55 !important; font-family:"Courier New", monospace !important; text-shadow:0 0 6px rgba(57,255,85,.75); }
-div[data-baseweb="select"] svg { fill:#39ff55 !important; color:#39ff55 !important; }
-div[data-baseweb="popover"], ul[role="listbox"] { background:#000 !important; border:1px solid #39ff55 !important; box-shadow:0 0 14px rgba(57,255,85,.45) !important; }
-li[role="option"], div[role="option"] { background:#000 !important; color:#39ff55 !important; font-family:"Courier New", monospace !important; text-shadow:0 0 6px rgba(57,255,85,.75); }
-li[role="option"]:hover, div[role="option"]:hover, li[aria-selected="true"], div[aria-selected="true"] { background:rgba(57,255,85,.16) !important; color:#baffc4 !important; }
-button, .stDownloadButton button { background:#000 !important; color:#39ff55 !important; border:1px solid #39ff55 !important; border-radius:0 !important; font-family:"Courier New", monospace !important; }
+:root {
+    --terminal-green: #39ff55;
+    --terminal-dim: #8cff98;
+    --terminal-bg: #020802;
+}
+.stApp {
+    background: radial-gradient(circle at 50% 10%, #061806 0%, #020802 45%, #000 100%);
+}
+section[data-testid="stSidebar"] {
+    background: #000 !important;
+    border-right: 1px solid var(--terminal-green);
+    box-shadow: 0 0 18px rgba(57,255,85,.25);
+}
+/* Target labels/text only; do NOT style every child, because BaseWeb icon fonts can render text such as keyboard_double_arrow_down. */
+section[data-testid="stSidebar"] label,
+section[data-testid="stSidebar"] p,
+section[data-testid="stSidebar"] h1,
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3,
+.stSelectbox label,
+.stNumberInput label,
+.stCheckbox label,
+h1, h2, h3, .stCaptionContainer {
+    font-family: "Courier New", "DejaVu Sans Mono", monospace !important;
+    color: var(--terminal-green) !important;
+    text-shadow: 0 0 7px rgba(57,255,85,.8);
+}
+/* Keep icon ligature fonts and SVG icons intact. */
+svg,
+[data-testid*="icon"],
+[class*="icon"],
+[class*="Icon"],
+.material-icons,
+.material-symbols-outlined,
+.material-symbols-rounded,
+.material-symbols-sharp {
+    font-family: initial !important;
+    text-shadow: none !important;
+}
+div[data-baseweb="select"] > div,
+div[data-baseweb="input"] > div,
+.stNumberInput input {
+    background: #000 !important;
+    color: var(--terminal-green) !important;
+    border: 1px solid var(--terminal-green) !important;
+    border-radius: 0 !important;
+    box-shadow: inset 0 0 10px rgba(57,255,85,.18), 0 0 8px rgba(57,255,85,.22) !important;
+    font-family: "Courier New", "DejaVu Sans Mono", monospace !important;
+}
+/* Style select/value text, but avoid icon containers. */
+div[data-baseweb="select"] span:not([class*="icon"]):not([class*="Icon"]),
+div[data-baseweb="select"] input,
+div[data-baseweb="input"] input,
+.stNumberInput input {
+    color: var(--terminal-green) !important;
+    -webkit-text-fill-color: var(--terminal-green) !important;
+    font-family: "Courier New", "DejaVu Sans Mono", monospace !important;
+    text-shadow: 0 0 6px rgba(57,255,85,.75);
+}
+div[data-baseweb="select"] svg {
+    fill: var(--terminal-green) !important;
+    color: var(--terminal-green) !important;
+}
+div[data-baseweb="popover"],
+ul[role="listbox"] {
+    background: #000 !important;
+    border: 1px solid var(--terminal-green) !important;
+    box-shadow: 0 0 14px rgba(57,255,85,.45) !important;
+}
+li[role="option"],
+div[role="option"] {
+    background: #000 !important;
+    color: var(--terminal-green) !important;
+    font-family: "Courier New", "DejaVu Sans Mono", monospace !important;
+    text-shadow: 0 0 6px rgba(57,255,85,.75);
+}
+li[role="option"]:hover,
+div[role="option"]:hover,
+li[aria-selected="true"],
+div[aria-selected="true"] {
+    background: rgba(57,255,85,.16) !important;
+    color: #baffc4 !important;
+}
+button, .stDownloadButton button {
+    background: #000 !important;
+    color: var(--terminal-green) !important;
+    border: 1px solid var(--terminal-green) !important;
+    border-radius: 0 !important;
+    font-family: "Courier New", "DejaVu Sans Mono", monospace !important;
+    text-shadow: 0 0 6px rgba(57,255,85,.75);
+}
 </style>
 '''
 st.markdown(APPLE_II_CSS, unsafe_allow_html=True)
 
 def load_products():
+    # Not cached: prevents stale CSV values from hiding updated flange pipe sizes.
     df = pd.read_csv(DATABASE_FILE)
     for col, default in REQUIRED_COLUMNS.items():
         if col not in df.columns:
