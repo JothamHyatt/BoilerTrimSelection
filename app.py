@@ -9,18 +9,17 @@ DATABASE_FILE=Path('hydronic_parts_database.csv'); DIAGRAM_GIF=Path('hot_water_h
 IMG_W,IMG_H=980,586
 FILL_COMPONENT='Fill Valve / Backflow Preventer'; PSHT_SERVICE_MODELS={'PSHT30','PSHT60','PSHT90'}
 COMPONENT_ORDER=['Boiler',FILL_COMPONENT,'Air Separator','Expansion Tank','Pump Isolation Flanges']
-COMPONENT_POSITIONS={'Air Separator':{'cx':395,'cy':210,'r':30,'callout_x':410,'callout_y':70},'Expansion Tank':{'cx':395,'cy':285,'r':42,'callout_x':235,'callout_y':240},'Pump Isolation Flanges':{'cx':312,'cy':230,'r':24,'callout_x':120,'callout_y':115},'Boiler':{'cx':335,'cy':470,'r':34,'callout_x':360,'callout_y':390},FILL_COMPONENT:{'cx':145,'cy':415,'r':32,'callout_x':210,'callout_y':320}}
+COMPONENT_POSITIONS={'Air Separator':{'cx':395,'cy':210,'r':30,'callout_x':410,'callout_y':70},'Expansion Tank':{'cx':395,'cy':285,'r':42,'callout_x':235,'callout_y':240},'Pump Isolation Flanges':{'cx':521,'cy':212,'r':18,'callout_x':555,'callout_y':105},'Boiler':{'cx':335,'cy':470,'r':34,'callout_x':360,'callout_y':390},FILL_COMPONENT:{'cx':178,'cy':230,'r':40,'callout_x':215,'callout_y':120}}
 REQUIRED_COLUMNS={'component':'','manufacturer':'','system_type':'Any','connection_type':'Any','fuel_type':'N/A','flue_type':'N/A','tankless_coil':'N/A','selection_option':'N/A','input_mbh':'N/A','min_btu':0,'max_btu':0,'pipe_size':'N/A','quantity':1,'model_number':'','part_number':'','description':'','notes':''}
-st.markdown('''<style>:root{--terminal-green:#39ff55}.stApp{background:#000}section[data-testid="stSidebar"]{background:#000!important;border-right:1px solid #39ff55}section[data-testid="stSidebar"] label,.stSelectbox label,.stNumberInput label,.stCheckbox label,h1,h2,h3,.stCaptionContainer{font-family:"Courier New",monospace!important;color:#39ff55!important;text-shadow:0 0 7px #39ff55}svg,[data-testid*="icon"],[class*="icon"],[class*="Icon"],.material-icons,.material-symbols-outlined{font-family:initial!important;text-shadow:none!important}div[data-baseweb="select"]>div,div[data-baseweb="input"]>div,.stNumberInput input{background:#000!important;color:#39ff55!important;border:1px solid #39ff55!important;border-radius:0!important;font-family:"Courier New",monospace!important}div[data-baseweb="select"] span:not([class*="icon"]):not([class*="Icon"]),div[data-baseweb="select"] input,div[data-baseweb="input"] input,.stNumberInput input{color:#39ff55!important;-webkit-text-fill-color:#39ff55!important;font-family:"Courier New",monospace!important}div[data-baseweb="popover"],ul[role="listbox"]{background:#000!important;border:1px solid #39ff55!important}button,.stDownloadButton button{background:#000!important;color:#39ff55!important;border:1px solid #39ff55!important;border-radius:0!important;font-family:"Courier New",monospace!important}</style>''',unsafe_allow_html=True)
+st.markdown('<style>.stApp{background:#000}section[data-testid="stSidebar"]{background:#000!important;border-right:1px solid #39ff55}section[data-testid="stSidebar"] label,.stSelectbox label,.stNumberInput label,h1,h2,h3{font-family:"Courier New",monospace!important;color:#39ff55!important}svg,[data-testid*="icon"],[class*="icon"],[class*="Icon"]{font-family:initial!important}div[data-baseweb="select"]>div,div[data-baseweb="input"]>div,.stNumberInput input{background:#000!important;color:#39ff55!important;border:1px solid #39ff55!important;border-radius:0!important;font-family:"Courier New",monospace!important}button{background:#000!important;color:#39ff55!important;border:1px solid #39ff55!important}</style>', unsafe_allow_html=True)
 def load_products():
     df=pd.read_csv(DATABASE_FILE)
-    for col,default in REQUIRED_COLUMNS.items():
-        if col not in df.columns: df[col]=default
-    for col in ['system_type','connection_type','fuel_type','flue_type','tankless_coil','selection_option','pipe_size','input_mbh']:
-        df[col]=df[col].fillna(REQUIRED_COLUMNS.get(col,'N/A'))
+    for c,d in REQUIRED_COLUMNS.items():
+        if c not in df.columns: df[c]=d
+    for c in ['system_type','connection_type','fuel_type','flue_type','tankless_coil','selection_option','pipe_size','input_mbh']: df[c]=df[c].fillna(REQUIRED_COLUMNS.get(c,'N/A'))
     df['part_number']=df['part_number'].fillna(df['model_number']); df['quantity']=pd.to_numeric(df['quantity'],errors='coerce').fillna(1).astype(int); df['min_btu']=pd.to_numeric(df['min_btu'],errors='coerce').fillna(0).astype(int); df['max_btu']=pd.to_numeric(df['max_btu'],errors='coerce').fillna(0).astype(int)
     return df
-def select_product(df,component,btu,expansion_system_type=None,pump_connection_type=None,boiler_fuel_type=None,boiler_flue_type=None,boiler_tankless_coil=None,fill_valve_option=None):
+def select_product(df, component, btu, expansion_system_type=None, pump_connection_type=None, boiler_fuel_type=None, boiler_flue_type=None, boiler_tankless_coil=None, fill_valve_option=None):
     f=df[df.component==component].copy()
     if component=='Expansion Tank': f=f[f.system_type==expansion_system_type]
     if component=='Pump Isolation Flanges': f=f[f.connection_type==pump_connection_type]
@@ -36,26 +35,33 @@ def make_row(comp,match,expansion_system_type,pump_connection_type,boiler_fuel_t
 def image_to_base64(path): return base64.b64encode(path.read_bytes()).decode('utf-8')
 products=load_products(); st.title('HOT WATER HYDRONIC SYSTEM SELECTOR'); st.caption('Demo: animated diagram + selected equipment breakdown')
 with st.sidebar:
-    st.header('System Inputs'); btu=st.number_input('BTU Capacity / Boiler Output BTU',0,5000000,120000,5000); boiler_fuel_type=st.selectbox('Boiler Fuel Type',['Natural Gas','Oil']); boiler_flue_type='N/A'; boiler_tankless_coil='N/A'
-    if boiler_fuel_type=='Oil': boiler_flue_type=st.selectbox('Boiler Flue Type',['Top Flue','Rear Flue']); boiler_tankless_coil=st.selectbox('Tankless Coil',['Without Tankless Coil','With Tankless Coil'])
-    fill_opts=sorted([x for x in products.loc[products.component==FILL_COMPONENT,'selection_option'].dropna().unique() if x!='N/A']); fill_valve_option=st.selectbox('Fill Valve / Backflow Preventer',fill_opts)
-    exp_opts=sorted([x for x in products.loc[products.component=='Expansion Tank','system_type'].dropna().unique() if x!='Any']); expansion_system_type=st.selectbox('Expansion Tank System Type',exp_opts)
-    pump_connection_type=st.selectbox('Pump Isolation Flange Connection Type',['Press','Sweat','Threaded']); highlighted_component=st.selectbox('Highlighted Component',COMPONENT_ORDER); calibration_mode=st.checkbox('Show highlight calibration controls',False)
+    st.header('System Inputs')
+    btu=st.number_input('BTU Capacity / Boiler Output BTU',0,5000000,120000,5000)
+    boiler_fuel_type=st.selectbox('Boiler Fuel Type',['Natural Gas','Oil'])
+    boiler_flue_type='N/A'; boiler_tankless_coil='N/A'
+    if boiler_fuel_type=='Oil':
+        boiler_flue_type=st.selectbox('Boiler Flue Type',['Top Flue','Rear Flue']); boiler_tankless_coil=st.selectbox('Tankless Coil',['Without Tankless Coil','With Tankless Coil'])
+    fill_valve_option=st.selectbox('Fill Valve / Backflow Preventer',sorted([x for x in products.loc[products.component==FILL_COMPONENT,'selection_option'].dropna().unique() if x!='N/A']))
+    expansion_system_type=st.selectbox('Expansion Tank System Type',sorted([x for x in products.loc[products.component=='Expansion Tank','system_type'].dropna().unique() if x!='Any']))
+    pump_connection_type=st.selectbox('Pump Isolation Flange Connection Type',['Press','Sweat','Threaded'])
+    highlighted_component=st.selectbox('Highlighted Component',COMPONENT_ORDER)
+    calibration_mode=st.checkbox('Show highlight calibration controls',False)
 selected_rows=[]; expansion_selected_model=None
 for comp in COMPONENT_ORDER:
-    m=select_product(products,comp,int(btu),expansion_system_type,pump_connection_type,boiler_fuel_type,boiler_flue_type,boiler_tankless_coil,fill_valve_option); row=make_row(comp,m,expansion_system_type,pump_connection_type,boiler_fuel_type,boiler_flue_type,boiler_tankless_coil,fill_valve_option); selected_rows.append(row)
+    row=make_row(comp,select_product(products,comp,int(btu),expansion_system_type,pump_connection_type,boiler_fuel_type,boiler_flue_type,boiler_tankless_coil,fill_valve_option),expansion_system_type,pump_connection_type,boiler_fuel_type,boiler_flue_type,boiler_tankless_coil,fill_valve_option); selected_rows.append(row)
     if comp=='Expansion Tank': expansion_selected_model=row['Model #']
-if expansion_selected_model in PSHT_SERVICE_MODELS: selected_rows.append({'Component':'Expansion Tank Service Valve','Selection Option':'Included with PSHT expansion tank','Qty':1,'Manufacturer':'Webstone','Fuel Type':'N/A','Input MBH':'N/A','Flue Type':'N/A','Tankless Coil':'N/A','Connection Type':'N/A','System Type':'N/A','Model #':'WH41672','Part #':'WH41672','Pipe Size':'1/2"','BTU Range':'N/A','Description':'Automatically included [1] WH41672 expansion tank service valve with PSHT30, PSHT60, or PSHT90 selection.'})
+if expansion_selected_model in PSHT_SERVICE_MODELS:
+    selected_rows.append({'Component':'Expansion Tank Service Valve','Selection Option':'Included with PSHT expansion tank','Qty':1,'Manufacturer':'Webstone','Fuel Type':'N/A','Input MBH':'N/A','Flue Type':'N/A','Tankless Coil':'N/A','Connection Type':'N/A','System Type':'N/A','Model #':'WH41672','Part #':'WH41672','Pipe Size':'1/2"','BTU Range':'N/A','Description':'Automatically included [1] WH41672 expansion tank service valve with PSHT30, PSHT60, or PSHT90 selection.'})
 selected_equipment=pd.DataFrame(selected_rows)
 matches=select_product(products,highlighted_component,int(btu),expansion_system_type,pump_connection_type,boiler_fuel_type,boiler_flue_type,boiler_tankless_coil,fill_valve_option); selected=None if matches.empty else matches.iloc[0]
-if selected is None: callout_title=highlighted_component.upper(); callout_body=f'NO MATCH\n{int(btu):,} BTU'
+if selected is None: callout_title=highlighted_component.upper(); callout_body=f'NO MATCH\\n{int(btu):,} BTU'
 elif highlighted_component=='Boiler':
-    oil_line=f"\n{selected.flue_type}\n{selected.tankless_coil}" if selected.fuel_type=='Oil' else ''; callout_title='BOILER'; callout_body=f"{selected.manufacturer}\n{selected.model_number}\n{selected.fuel_type} / {selected.input_mbh} MBH IN{oil_line}\n{int(selected.min_btu):,}–{int(selected.max_btu):,} BTU OUT"
-elif highlighted_component==FILL_COMPONENT: callout_title='PRESSURE REDUCING VALVE'; callout_body=f"{selected.selection_option}\n{selected.manufacturer}\nQTY {int(selected.quantity)}\n{selected.model_number}\n{selected.pipe_size} CONNECTION"
+    oil_line=f"\\n{selected.flue_type}\\n{selected.tankless_coil}" if selected.fuel_type=='Oil' else ''; callout_title='BOILER'; callout_body=f"{selected.manufacturer}\\n{selected.model_number}\\n{selected.fuel_type} / {selected.input_mbh} MBH IN{oil_line}\\n{int(selected.min_btu):,}–{int(selected.max_btu):,} BTU OUT"
+elif highlighted_component==FILL_COMPONENT: callout_title='PRESSURE REDUCING VALVE'; callout_body=f"{selected.selection_option}\\n{selected.manufacturer}\\nQTY {int(selected.quantity)}\\n{selected.model_number}\\n{selected.pipe_size} CONNECTION"
 elif highlighted_component=='Expansion Tank':
-    svc='\n+ [1] WH41672 SERVICE VALVE' if selected.model_number in PSHT_SERVICE_MODELS else ''; callout_title='EXPANSION TANK'; callout_body=f"{selected.manufacturer}\n{selected.model_number}\n{selected.system_type}\n{selected.pipe_size} CONNECTION{svc}"
-elif highlighted_component=='Pump Isolation Flanges': callout_title='PUMP ISOLATION FLANGES'; callout_body=f"QTY {int(selected.quantity)}\n{selected.manufacturer} {selected.model_number}\n{selected.connection_type} / {selected.pipe_size} PIPE"
-else: callout_title='AIR SEPARATOR'; callout_body=f"{selected.manufacturer} {selected.model_number}\n{selected.pipe_size} PIPE"
+    svc='\\n+ [1] WH41672 SERVICE VALVE' if selected.model_number in PSHT_SERVICE_MODELS else ''; callout_title='EXPANSION TANK'; callout_body=f"{selected.manufacturer}\\n{selected.model_number}\\n{selected.system_type}\\n{selected.pipe_size} CONNECTION{svc}"
+elif highlighted_component=='Pump Isolation Flanges': callout_title='PUMP ISOLATION FLANGES'; callout_body=f"QTY {int(selected.quantity)}\\n{selected.manufacturer} {selected.model_number}\\n{selected.connection_type} / {selected.pipe_size} PIPE"
+else: callout_title='AIR SEPARATOR'; callout_body=f"{selected.manufacturer} {selected.model_number}\\n{selected.pipe_size} PIPE"
 pos=COMPONENT_POSITIONS[highlighted_component].copy()
 if calibration_mode:
     with st.sidebar:
@@ -64,7 +70,9 @@ left,right=st.columns([1.65,1])
 with left:
     if not DIAGRAM_GIF.exists(): st.warning('Diagram GIF is missing. Keep hot_water_hydronic_system_selector_demo.gif in the app folder.')
     else:
-        gif64=image_to_base64(DIAGRAM_GIF); html=f'''<style>.diagram-wrap {{ width:100%; background:#000; border:1px solid #00cc44; box-shadow:0 0 18px rgba(0,255,80,.35); font-family:"Courier New", monospace; }} .diagram-svg {{ display:block; width:100%; height:auto; }} .pulse-ring {{ fill:none; stroke:#39ff55; stroke-width:3; filter:drop-shadow(0 0 5px #39ff55); animation:pulseStroke 1.1s infinite; }} @keyframes pulseStroke {{ 0% {{ opacity:.45; stroke-width:2; }} 50% {{ opacity:1; stroke-width:5; }} 100% {{ opacity:.45; stroke-width:2; }} }} .callout-html {{ color:#39ff55; background:rgba(0,0,0,.84); border:1px solid #39ff55; padding:8px 11px; line-height:1.15; font-size:15px; text-shadow:0 0 7px #39ff55; box-shadow:0 0 12px rgba(57,255,85,.55); white-space:pre-line; max-width:330px; }} .terminal-line {{ color:#8cff98; font-size:.85em; }}</style><div class='diagram-wrap'><svg class='diagram-svg' viewBox='0 0 {IMG_W} {IMG_H}' preserveAspectRatio='xMidYMid meet'><image href='data:image/gif;base64,{gif64}' x='0' y='0' width='{IMG_W}' height='{IMG_H}' /><circle class='pulse-ring' cx='{pos['cx']}' cy='{pos['cy']}' r='{pos['r']}' /><foreignObject x='{pos['callout_x']}' y='{pos['callout_y']}' width='390' height='230'><div xmlns='http://www.w3.org/1999/xhtml' class='callout-html'><b>{callout_title}</b>\n{callout_body}\n<span class='terminal-line'>&gt; SELECTED BY INPUTS</span></div></foreignObject></svg></div>'''; components.html(html,height=625,scrolling=False)
+        gif64=image_to_base64(DIAGRAM_GIF)
+        html=f"""<style>.diagram-wrap {{ width:100%; background:#000; border:1px solid #00cc44; box-shadow:0 0 18px rgba(0,255,80,.35); font-family:'Courier New', monospace; }} .diagram-svg {{ display:block; width:100%; height:auto; }} .pulse-ring {{ fill:none; stroke:#39ff55; stroke-width:3; filter:drop-shadow(0 0 5px #39ff55); animation:pulseStroke 1.1s infinite; }} @keyframes pulseStroke {{ 0% {{ opacity:.45; stroke-width:2; }} 50% {{ opacity:1; stroke-width:5; }} 100% {{ opacity:.45; stroke-width:2; }} }} .callout-html {{ color:#39ff55; background:rgba(0,0,0,.84); border:1px solid #39ff55; padding:8px 11px; line-height:1.15; font-size:15px; text-shadow:0 0 7px #39ff55; box-shadow:0 0 12px rgba(57,255,85,.55); white-space:pre-line; max-width:330px; }} .terminal-line {{ color:#8cff98; font-size:.85em; }}</style><div class='diagram-wrap'><svg class='diagram-svg' viewBox='0 0 {IMG_W} {IMG_H}' preserveAspectRatio='xMidYMid meet'><image href='data:image/gif;base64,{gif64}' x='0' y='0' width='{IMG_W}' height='{IMG_H}' /><circle class='pulse-ring' cx='{pos['cx']}' cy='{pos['cy']}' r='{pos['r']}' /><foreignObject x='{pos['callout_x']}' y='{pos['callout_y']}' width='390' height='230'><div xmlns='http://www.w3.org/1999/xhtml' class='callout-html'><b>{callout_title}</b>\\n{callout_body}\\n<span class='terminal-line'>&gt; SELECTED BY INPUTS</span></div></foreignObject></svg></div>"""
+        components.html(html,height=625,scrolling=False)
 with right:
     st.subheader('Highlighted Selection')
     if selected is None: st.warning(f'No match found for {highlighted_component}, {int(btu):,} BTU.')
