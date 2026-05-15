@@ -1,22 +1,22 @@
 # Hydronic Selector Demo - Streamlit
 
-Pipe size display fix only.
+This is the complete repackaged app.
 
-## What changed
+Included:
+- app.py
+- hydronic_parts_database.csv
+- README
 
-- `hydronic_parts_database.csv` includes pipe sizes for all Pump Isolation Flange selections.
-- `app.py` displays `Pipe Size` in:
-  - Selected Equipment Breakdown
-  - Highlighted Selection
-  - Detailed Component Cards
-  - CSV export
-- The app still uses your existing `hot_water_hydronic_system_selector_demo.gif` and does **not** overwrite or regenerate the GIF.
+Important: keep `hot_water_hydronic_system_selector_demo.gif` in the same folder as `app.py`.
 
-## Deployment
+Run:
 
-Replace only:
+```bash
+streamlit run app.py
+```
 
-- `app.py`
-- `hydronic_parts_database.csv`
-
-Keep your existing green monochrome GIF in place.
+Fixes included:
+- GIF callout newline fix for visible `\n` or `/n` text.
+- Fill Valve / Backflow Preventer highlight at cx=178, cy=230, r=40.
+- Pump Isolation Flanges highlight at cx=521, cy=212, r=18.
+- PSHT expansion tanks automatically include [1] WH41672 service valve.
