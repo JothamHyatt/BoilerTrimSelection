@@ -1,54 +1,55 @@
-component,manufacturer,system_type,connection_type,fuel_type,flue_type,tankless_coil,selection_option,input_mbh,min_btu,max_btu,pipe_size,quantity,model_number,part_number,description
-Air Separator,Resideo,Any,Any,N/A,N/A,N/A,N/A,N/A,0,80000,"1""",1,HPV100,HPV100,Resideo HPV100 air separator.
-Air Separator,Resideo,Any,Any,N/A,N/A,N/A,N/A,N/A,80000,140000,"1-1/4""",1,HPV125,HPV125,Resideo HPV125 air separator.
-Air Separator,Resideo,Any,Any,N/A,N/A,N/A,N/A,N/A,140000,250000,"1-1/2""",1,HPV150,HPV150,Resideo HPV150 air separator.
-Air Separator,Resideo,Any,Any,N/A,N/A,N/A,N/A,N/A,250000,450000,"2""",1,HPV200,HPV200,Resideo HPV200 air separator.
-Expansion Tank,Proselect / Amtrol,Copper Baseboard/Radiant,Any,N/A,N/A,N/A,N/A,N/A,0,150000,"1/2""",1,PSHT30,PSHT30,Copper Baseboard/Radiant expansion tank.
-Expansion Tank,Proselect / Amtrol,Copper Baseboard/Radiant,Any,N/A,N/A,N/A,N/A,N/A,151000,250000,"1/2""",1,PSHT60,PSHT60,Copper Baseboard/Radiant expansion tank.
-Expansion Tank,Proselect / Amtrol,Copper Baseboard/Radiant,Any,N/A,N/A,N/A,N/A,N/A,251000,300000,"1/2""",1,PSHT90,PSHT90,Copper Baseboard/Radiant expansion tank.
-Expansion Tank,Proselect / Amtrol,Copper Baseboard/Radiant,Any,N/A,N/A,N/A,N/A,N/A,300000,400000,"1""",1,ASX30V,ASX30V,Copper Baseboard/Radiant expansion tank.
-Expansion Tank,Proselect / Amtrol,Cast iron radiators/baseboard,Any,N/A,N/A,N/A,N/A,N/A,0,100000,"1/2""",1,PSHT30,PSHT30,Cast iron radiators/baseboard expansion tank.
-Expansion Tank,Proselect / Amtrol,Cast iron radiators/baseboard,Any,N/A,N/A,N/A,N/A,N/A,101000,149000,"1/2""",1,PSHT60,PSHT60,Cast iron radiators/baseboard expansion tank.
-Expansion Tank,Proselect / Amtrol,Cast iron radiators/baseboard,Any,N/A,N/A,N/A,N/A,N/A,150000,200000,"1/2""",1,PSHT90,PSHT90,Cast iron radiators/baseboard expansion tank.
-Expansion Tank,Proselect / Amtrol,Cast iron radiators/baseboard,Any,N/A,N/A,N/A,N/A,N/A,201000,250000,"1""",1,ASX30V,ASX30V,Cast iron radiators/baseboard expansion tank.
-Expansion Tank,Proselect / Amtrol,Cast iron radiators/baseboard,Any,N/A,N/A,N/A,N/A,N/A,251000,300000,"1""",1,ASX40V,ASX40V,Cast iron radiators/baseboard expansion tank.
-Expansion Tank,Proselect / Amtrol,Cast iron radiators/baseboard,Any,N/A,N/A,N/A,N/A,N/A,301000,400000,"1""",1,ASX60V,ASX60V,Cast iron radiators/baseboard expansion tank.
-Pump Isolation Flanges,Webstone,Any,Press,N/A,N/A,N/A,N/A,N/A,0,40000,"3/4""",2,WH81403HV,WH81403HV,Press pump isolation flanges.
-Pump Isolation Flanges,Webstone,Any,Press,N/A,N/A,N/A,N/A,N/A,40000,80000,"1""",2,WH81404HV,WH81404HV,Press pump isolation flanges.
-Pump Isolation Flanges,Webstone,Any,Press,N/A,N/A,N/A,N/A,N/A,80000,140000,"1-1/4""",2,WH81405HV,WH81405HV,Press pump isolation flanges.
-Pump Isolation Flanges,Webstone,Any,Press,N/A,N/A,N/A,N/A,N/A,140000,250000,"1-1/2""",2,WH81406HV,WH81406HV,Press pump isolation flanges.
-Pump Isolation Flanges,Webstone,Any,Press,N/A,N/A,N/A,N/A,N/A,250000,400000,"2""",2,WH81407HV,WH81407HV,Press pump isolation flanges.
-Pump Isolation Flanges,FNW,Any,Sweat,N/A,N/A,N/A,N/A,N/A,0,40000,"3/4""",2,FNW475F,FNW475F,Sweat pump isolation flanges.
-Pump Isolation Flanges,FNW,Any,Sweat,N/A,N/A,N/A,N/A,N/A,40000,80000,"1""",2,FNW475G,FNW475G,Sweat pump isolation flanges.
-Pump Isolation Flanges,FNW,Any,Sweat,N/A,N/A,N/A,N/A,N/A,80000,140000,"1-1/4""",2,FNW475H,FNW475H,Sweat pump isolation flanges.
-Pump Isolation Flanges,FNW,Any,Sweat,N/A,N/A,N/A,N/A,N/A,140000,250000,"1-1/2""",2,FNW475J,FNW475J,Sweat pump isolation flanges.
-Pump Isolation Flanges,Webstone,Any,Sweat,N/A,N/A,N/A,N/A,N/A,250000,400000,"2""",2,WH50407HV,WH50407HV,Sweat pump isolation flanges.
-Pump Isolation Flanges,FNW,Any,Threaded,N/A,N/A,N/A,N/A,N/A,0,40000,"3/4""",2,FNW470F,FNW470F,Threaded pump isolation flanges.
-Pump Isolation Flanges,FNW,Any,Threaded,N/A,N/A,N/A,N/A,N/A,40000,80000,"1""",2,FNW470G,FNW470G,Threaded pump isolation flanges.
-Pump Isolation Flanges,FNW,Any,Threaded,N/A,N/A,N/A,N/A,N/A,80000,140000,"1-1/4""",2,FNW470H,FNW470H,Threaded pump isolation flanges.
-Pump Isolation Flanges,FNW,Any,Threaded,N/A,N/A,N/A,N/A,N/A,140000,250000,"1-1/2""",2,FNW470J,FNW470J,Threaded pump isolation flanges.
-Pump Isolation Flanges,Webstone,Any,Threaded,N/A,N/A,N/A,N/A,N/A,250000,400000,"2""",2,WH40407HV,WH40407HV,Threaded pump isolation flanges.
-Boiler,Proselect Force,Any,Any,Natural Gas,N/A,N/A,N/A,37,0,32000,N/A,1,FORCE02ENRHG1,FORCE02ENRHG1,Natural gas boiler.
-Boiler,Proselect Force,Any,Any,Natural Gas,N/A,N/A,N/A,68,32000,57000,N/A,1,FORCE03ENRHG1,FORCE03ENRHG1,Natural gas boiler.
-Boiler,Proselect Force,Any,Any,Natural Gas,N/A,N/A,N/A,102,57000,85000,N/A,1,FORCE04ENRHG1,FORCE04ENRHG1,Natural gas boiler.
-Boiler,Proselect Force,Any,Any,Natural Gas,N/A,N/A,N/A,136,85000,114000,N/A,1,FORCE05ENRHG1,FORCE05ENRHG1,Natural gas boiler.
-Boiler,Proselect Force,Any,Any,Natural Gas,N/A,N/A,N/A,170,114000,142000,N/A,1,FORCE06ENRHG1,FORCE06ENRHG1,Natural gas boiler.
-Boiler,Proselect Force,Any,Any,Natural Gas,N/A,N/A,N/A,204,142000,170000,N/A,1,FORCE07ENRHG1,FORCE07ENRHG1,Natural gas boiler.
-Boiler,Proselect Force,Any,Any,Natural Gas,N/A,N/A,N/A,238,170000,199000,N/A,1,FORCE08ENRHG1,FORCE08ENRHG1,Natural gas boiler.
-Boiler,Proselect Force,Any,Any,Natural Gas,N/A,N/A,N/A,272,199000,227000,N/A,1,FORCE09ENRHG1,FORCE09ENRHG1,Natural gas boiler.
-Boiler,Proselect Force,Any,Any,Oil,Rear Flue,Without Tankless Coil,N/A,84,0,74000,N/A,1,FORCEOIL084EGBHDR,FORCEOIL084EGBHDR,Oil boiler rear flue.
-Boiler,Proselect Force,Any,Any,Oil,Rear Flue,Without Tankless Coil,N/A,115,74000,101000,N/A,1,FORCEOIL115EGBHDR,FORCEOIL115EGBHDR,Oil boiler rear flue.
-Boiler,Proselect Force,Any,Any,Oil,Rear Flue,Without Tankless Coil,N/A,140,101000,123000,N/A,1,FORCEOIL140EGBHDR,FORCEOIL140EGBHDR,Oil boiler rear flue.
-Boiler,Proselect Force,Any,Any,Oil,Rear Flue,Without Tankless Coil,N/A,182,123000,160000,N/A,1,FORCEOIL182EGBHDR,FORCEOIL182EGBHDR,Oil boiler rear flue.
-Boiler,Proselect Force,Any,Any,Oil,Top Flue,Without Tankless Coil,N/A,140,0,122000,N/A,1,FORCEVFO3E,FORCEVFO3E,Oil boiler top flue.
-Boiler,Proselect Force,Any,Any,Oil,Top Flue,Without Tankless Coil,N/A,210,122000,182000,N/A,1,FORCEVFO4E,FORCEVFO4E,Oil boiler top flue.
-Boiler,Proselect Force,Any,Any,Oil,Top Flue,Without Tankless Coil,N/A,266,182000,231000,N/A,1,FORCEVFO5E,FORCEVFO5E,Oil boiler top flue.
-Boiler,Proselect Force,Any,Any,Oil,Top Flue,With Tankless Coil,N/A,140,0,122000,N/A,1,FORCEVFO3ET,FORCEVFO3ET,Oil boiler top flue.
-Boiler,Proselect Force,Any,Any,Oil,Top Flue,With Tankless Coil,N/A,210,122000,182000,N/A,1,FORCEVFO4ET,FORCEVFO4ET,Oil boiler top flue.
-Boiler,Proselect Force,Any,Any,Oil,Top Flue,With Tankless Coil,N/A,266,182000,231000,N/A,1,FORCEVFO5ET,FORCEVFO5ET,Oil boiler top flue.
-Fill Valve / Backflow Preventer,Bell & Gossett,Any,Any,N/A,N/A,N/A,Bell & Gossett,N/A,0,5000000,"1/2""",2,B110192LF + W9DM3D,B110192LF + W9DM3D,"Bell & Gossett, 1/2 inch connection."
-Fill Valve / Backflow Preventer,Caleffi,Any,Any,N/A,N/A,N/A,Caleffi,N/A,0,5000000,"1/2""",1,C573002A,C573002A,"Caleffi, 1/2 inch connection."
-Fill Valve / Backflow Preventer,Resideo,Any,Any,N/A,N/A,N/A,Resideo (traditional),N/A,0,5000000,"1/2""",1,HFM911,HFM911,"Resideo (traditional), 1/2 inch connection."
-Fill Valve / Backflow Preventer,Resideo,Any,Any,N/A,N/A,N/A,Resideo (combination),N/A,0,5000000,"1/2""",1,HNK300S100,HNK300S100,"Resideo (combination), 1/2 inch connection."
-Fill Valve / Backflow Preventer,Taco,Any,Any,N/A,N/A,N/A,Taco (combination),N/A,0,5000000,"1/2""",1,T3450T2,T3450T2,"Taco (combination), 1/2 inch connection."
-Fill Valve / Backflow Preventer,Taco,Any,Any,N/A,N/A,N/A,Taco (old style),N/A,0,5000000,"1/2""",2,T3293 + W9DM3D,T3293 + W9DM3D,"Taco (old style), 1/2 inch connection."
+component,manufacturer,system_type,connection_type,fuel_type,flue_type,tankless_coil,selection_option,input_mbh,min_btu,max_btu,pipe_size,quantity,model_number,part_number,description,notes
+Air Separator,Resideo,Any,Any,N/A,N/A,N/A,N/A,N/A,0,40000,"3/4""",1,HPV075,HPV075,"Resideo HPV075 air separator / air eliminator, 3/4"" connection.",Verify final selection against manufacturer submittal and project requirements.
+Air Separator,Resideo,Any,Any,N/A,N/A,N/A,N/A,N/A,40000,80000,"1""",1,HPV100,HPV100,"Resideo HPV100 air separator / air eliminator, 1"" connection.",Verify final selection against manufacturer submittal and project requirements.
+Air Separator,Resideo,Any,Any,N/A,N/A,N/A,N/A,N/A,80000,140000,"1-1/4""",1,HPV125,HPV125,"Resideo HPV125 air separator / air eliminator, 1-1/4"" connection.",Verify final selection against manufacturer submittal and project requirements.
+Air Separator,Resideo,Any,Any,N/A,N/A,N/A,N/A,N/A,140000,250000,"1-1/2""",1,HPV150,HPV150,"Resideo HPV150 air separator / air eliminator, 1-1/2"" connection.",Verify final selection against manufacturer submittal and project requirements.
+Air Separator,Resideo,Any,Any,N/A,N/A,N/A,N/A,N/A,250000,450000,"2""",1,HPV200,HPV200,"Resideo HPV200 air separator / air eliminator, 2"" connection.",Verify final selection against manufacturer submittal and project requirements.
+Expansion Tank,Proselect / Amtrol,Copper Baseboard/Radiant,Any,N/A,N/A,N/A,N/A,N/A,0,150000,"1/2""",1,PSHT30,PSHT30,"Copper Baseboard/Radiant expansion tank, 1/2"" connection.",Verify final selection against manufacturer submittal and project requirements.
+Expansion Tank,Proselect / Amtrol,Copper Baseboard/Radiant,Any,N/A,N/A,N/A,N/A,N/A,151000,250000,"1/2""",1,PSHT60,PSHT60,"Copper Baseboard/Radiant expansion tank, 1/2"" connection.",Verify final selection against manufacturer submittal and project requirements.
+Expansion Tank,Proselect / Amtrol,Copper Baseboard/Radiant,Any,N/A,N/A,N/A,N/A,N/A,251000,300000,"1/2""",1,PSHT90,PSHT90,"Copper Baseboard/Radiant expansion tank, 1/2"" connection.",Verify final selection against manufacturer submittal and project requirements.
+Expansion Tank,Proselect / Amtrol,Copper Baseboard/Radiant,Any,N/A,N/A,N/A,N/A,N/A,300000,400000,"1""",1,ASX30V,ASX30V,"Copper Baseboard/Radiant expansion tank, 1"" connection.",Verify final selection against manufacturer submittal and project requirements.
+Expansion Tank,Proselect / Amtrol,Cast iron radiators/baseboard,Any,N/A,N/A,N/A,N/A,N/A,0,100000,"1/2""",1,PSHT30,PSHT30,"Cast iron radiators/baseboard expansion tank, 1/2"" connection.",Verify final selection against manufacturer submittal and project requirements.
+Expansion Tank,Proselect / Amtrol,Cast iron radiators/baseboard,Any,N/A,N/A,N/A,N/A,N/A,101000,149000,"1/2""",1,PSHT60,PSHT60,"Cast iron radiators/baseboard expansion tank, 1/2"" connection.",Verify final selection against manufacturer submittal and project requirements.
+Expansion Tank,Proselect / Amtrol,Cast iron radiators/baseboard,Any,N/A,N/A,N/A,N/A,N/A,150000,200000,"1/2""",1,PSHT90,PSHT90,"Cast iron radiators/baseboard expansion tank, 1/2"" connection.",Verify final selection against manufacturer submittal and project requirements.
+Expansion Tank,Proselect / Amtrol,Cast iron radiators/baseboard,Any,N/A,N/A,N/A,N/A,N/A,201000,250000,"1""",1,ASX30V,ASX30V,"Cast iron radiators/baseboard expansion tank, 1"" connection.",Verify final selection against manufacturer submittal and project requirements.
+Expansion Tank,Proselect / Amtrol,Cast iron radiators/baseboard,Any,N/A,N/A,N/A,N/A,N/A,251000,300000,"1""",1,ASX40V,ASX40V,"Cast iron radiators/baseboard expansion tank, 1"" connection.",Verify final selection against manufacturer submittal and project requirements.
+Expansion Tank,Proselect / Amtrol,Cast iron radiators/baseboard,Any,N/A,N/A,N/A,N/A,N/A,301000,400000,"1""",1,ASX60V,ASX60V,"Cast iron radiators/baseboard expansion tank, 1"" connection.",Verify final selection against manufacturer submittal and project requirements.
+Pump Isolation Flanges,Webstone,Any,Press,N/A,N/A,N/A,N/A,N/A,0,40000,"3/4""",2,WH81403HV,WH81403HV,"Press pump isolation flanges, 3/4"", quantity [2].",Verify final selection against manufacturer submittal and project requirements.
+Pump Isolation Flanges,Webstone,Any,Press,N/A,N/A,N/A,N/A,N/A,40000,80000,"1""",2,WH81404HV,WH81404HV,"Press pump isolation flanges, 1"", quantity [2].",Verify final selection against manufacturer submittal and project requirements.
+Pump Isolation Flanges,Webstone,Any,Press,N/A,N/A,N/A,N/A,N/A,80000,140000,"1-1/4""",2,WH81405HV,WH81405HV,"Press pump isolation flanges, 1-1/4"", quantity [2].",Verify final selection against manufacturer submittal and project requirements.
+Pump Isolation Flanges,Webstone,Any,Press,N/A,N/A,N/A,N/A,N/A,140000,250000,"1-1/2""",2,WH81406HV,WH81406HV,"Press pump isolation flanges, 1-1/2"", quantity [2].",Verify final selection against manufacturer submittal and project requirements.
+Pump Isolation Flanges,Webstone,Any,Press,N/A,N/A,N/A,N/A,N/A,250000,400000,"2""",2,WH81407HV,WH81407HV,"Press pump isolation flanges, 2"", quantity [2].",Verify final selection against manufacturer submittal and project requirements.
+Pump Isolation Flanges,FNW,Any,Sweat,N/A,N/A,N/A,N/A,N/A,0,40000,"3/4""",2,FNW475F,FNW475F,"Sweat pump isolation flanges, 3/4"", quantity [2].",Verify final selection against manufacturer submittal and project requirements.
+Pump Isolation Flanges,FNW,Any,Sweat,N/A,N/A,N/A,N/A,N/A,40000,80000,"1""",2,FNW475G,FNW475G,"Sweat pump isolation flanges, 1"", quantity [2].",Verify final selection against manufacturer submittal and project requirements.
+Pump Isolation Flanges,FNW,Any,Sweat,N/A,N/A,N/A,N/A,N/A,80000,140000,"1-1/4""",2,FNW475H,FNW475H,"Sweat pump isolation flanges, 1-1/4"", quantity [2].",Verify final selection against manufacturer submittal and project requirements.
+Pump Isolation Flanges,FNW,Any,Sweat,N/A,N/A,N/A,N/A,N/A,140000,250000,"1-1/2""",2,FNW475J,FNW475J,"Sweat pump isolation flanges, 1-1/2"", quantity [2].",Verify final selection against manufacturer submittal and project requirements.
+Pump Isolation Flanges,Webstone,Any,Sweat,N/A,N/A,N/A,N/A,N/A,250000,400000,"2""",2,WH50407HV,WH50407HV,"Sweat pump isolation flanges, 2"", quantity [2].",Verify final selection against manufacturer submittal and project requirements.
+Pump Isolation Flanges,FNW,Any,Threaded,N/A,N/A,N/A,N/A,N/A,0,40000,"3/4""",2,FNW470F,FNW470F,"Threaded pump isolation flanges, 3/4"", quantity [2].",Verify final selection against manufacturer submittal and project requirements.
+Pump Isolation Flanges,FNW,Any,Threaded,N/A,N/A,N/A,N/A,N/A,40000,80000,"1""",2,FNW470G,FNW470G,"Threaded pump isolation flanges, 1"", quantity [2].",Verify final selection against manufacturer submittal and project requirements.
+Pump Isolation Flanges,FNW,Any,Threaded,N/A,N/A,N/A,N/A,N/A,80000,140000,"1-1/4""",2,FNW470H,FNW470H,"Threaded pump isolation flanges, 1-1/4"", quantity [2].",Verify final selection against manufacturer submittal and project requirements.
+Pump Isolation Flanges,FNW,Any,Threaded,N/A,N/A,N/A,N/A,N/A,140000,250000,"1-1/2""",2,FNW470J,FNW470J,"Threaded pump isolation flanges, 1-1/2"", quantity [2].",Verify final selection against manufacturer submittal and project requirements.
+Pump Isolation Flanges,Webstone,Any,Threaded,N/A,N/A,N/A,N/A,N/A,250000,400000,"2""",2,WH40407HV,WH40407HV,"Threaded pump isolation flanges, 2"", quantity [2].",Verify final selection against manufacturer submittal and project requirements.
+Boiler,Proselect Force,Any,Any,Natural Gas,N/A,N/A,N/A,37,0,32000,N/A,1,FORCE02ENRHG1,FORCE02ENRHG1,Natural gas boiler.,Verify final selection against manufacturer submittal and project requirements.
+Boiler,Proselect Force,Any,Any,Natural Gas,N/A,N/A,N/A,68,32000,57000,N/A,1,FORCE03ENRHG1,FORCE03ENRHG1,Natural gas boiler.,Verify final selection against manufacturer submittal and project requirements.
+Boiler,Proselect Force,Any,Any,Natural Gas,N/A,N/A,N/A,102,57000,85000,N/A,1,FORCE04ENRHG1,FORCE04ENRHG1,Natural gas boiler.,Verify final selection against manufacturer submittal and project requirements.
+Boiler,Proselect Force,Any,Any,Natural Gas,N/A,N/A,N/A,136,85000,114000,N/A,1,FORCE05ENRHG1,FORCE05ENRHG1,Natural gas boiler.,Verify final selection against manufacturer submittal and project requirements.
+Boiler,Proselect Force,Any,Any,Natural Gas,N/A,N/A,N/A,170,114000,142000,N/A,1,FORCE06ENRHG1,FORCE06ENRHG1,Natural gas boiler.,Verify final selection against manufacturer submittal and project requirements.
+Boiler,Proselect Force,Any,Any,Natural Gas,N/A,N/A,N/A,204,142000,170000,N/A,1,FORCE07ENRHG1,FORCE07ENRHG1,Natural gas boiler.,Verify final selection against manufacturer submittal and project requirements.
+Boiler,Proselect Force,Any,Any,Natural Gas,N/A,N/A,N/A,238,170000,199000,N/A,1,FORCE08ENRHG1,FORCE08ENRHG1,Natural gas boiler.,Verify final selection against manufacturer submittal and project requirements.
+Boiler,Proselect Force,Any,Any,Natural Gas,N/A,N/A,N/A,272,199000,227000,N/A,1,FORCE09ENRHG1,FORCE09ENRHG1,Natural gas boiler.,Verify final selection against manufacturer submittal and project requirements.
+Boiler,Proselect Force,Any,Any,Oil,Rear Flue,Without Tankless Coil,N/A,84,0,74000,N/A,1,FORCEOIL084EGBHDR,FORCEOIL084EGBHDR,"Oil boiler, rear flue, without tankless coil.",Verify final selection against manufacturer submittal and project requirements.
+Boiler,Proselect Force,Any,Any,Oil,Rear Flue,Without Tankless Coil,N/A,115,74000,101000,N/A,1,FORCEOIL115EGBHDR,FORCEOIL115EGBHDR,"Oil boiler, rear flue, without tankless coil.",Verify final selection against manufacturer submittal and project requirements.
+Boiler,Proselect Force,Any,Any,Oil,Rear Flue,Without Tankless Coil,N/A,140,101000,123000,N/A,1,FORCEOIL140EGBHDR,FORCEOIL140EGBHDR,"Oil boiler, rear flue, without tankless coil.",Verify final selection against manufacturer submittal and project requirements.
+Boiler,Proselect Force,Any,Any,Oil,Rear Flue,Without Tankless Coil,N/A,182,123000,160000,N/A,1,FORCEOIL182EGBHDR,FORCEOIL182EGBHDR,"Oil boiler, rear flue, without tankless coil.",Verify final selection against manufacturer submittal and project requirements.
+Boiler,Proselect Force,Any,Any,Oil,Top Flue,Without Tankless Coil,N/A,140,0,122000,N/A,1,FORCEVFO3E,FORCEVFO3E,"Oil boiler, top flue.",Verify final selection against manufacturer submittal and project requirements.
+Boiler,Proselect Force,Any,Any,Oil,Top Flue,Without Tankless Coil,N/A,210,122000,182000,N/A,1,FORCEVFO4E,FORCEVFO4E,"Oil boiler, top flue.",Verify final selection against manufacturer submittal and project requirements.
+Boiler,Proselect Force,Any,Any,Oil,Top Flue,Without Tankless Coil,N/A,266,182000,231000,N/A,1,FORCEVFO5E,FORCEVFO5E,"Oil boiler, top flue.",Verify final selection against manufacturer submittal and project requirements.
+Boiler,Proselect Force,Any,Any,Oil,Top Flue,With Tankless Coil,N/A,140,0,122000,N/A,1,FORCEVFO3ET,FORCEVFO3ET,"Oil boiler, top flue.",Verify final selection against manufacturer submittal and project requirements.
+Boiler,Proselect Force,Any,Any,Oil,Top Flue,With Tankless Coil,N/A,210,122000,182000,N/A,1,FORCEVFO4ET,FORCEVFO4ET,"Oil boiler, top flue.",Verify final selection against manufacturer submittal and project requirements.
+Boiler,Proselect Force,Any,Any,Oil,Top Flue,With Tankless Coil,N/A,266,182000,231000,N/A,1,FORCEVFO5ET,FORCEVFO5ET,"Oil boiler, top flue.",Verify final selection against manufacturer submittal and project requirements.
+Fill Valve / Backflow Preventer,Bell & Gossett,Any,Any,N/A,N/A,N/A,Bell & Gossett,N/A,0,5000000,"1/2""",2,B110192LF + W9DM3D,B110192LF + W9DM3D,"Bell & Gossett, 1/2 inch connection.",Verify final selection against manufacturer submittal and project requirements.
+Fill Valve / Backflow Preventer,Caleffi,Any,Any,N/A,N/A,N/A,Caleffi,N/A,0,5000000,"1/2""",1,C573002A,C573002A,"Caleffi, 1/2 inch connection.",Verify final selection against manufacturer submittal and project requirements.
+Fill Valve / Backflow Preventer,Resideo,Any,Any,N/A,N/A,N/A,Resideo (traditional),N/A,0,5000000,"1/2""",1,HFM911,HFM911,"Resideo (traditional), 1/2 inch connection.",Verify final selection against manufacturer submittal and project requirements.
+Fill Valve / Backflow Preventer,Resideo,Any,Any,N/A,N/A,N/A,Resideo (combination),N/A,0,5000000,"1/2""",1,HNK300S100,HNK300S100,"Resideo (combination), 1/2 inch connection.",Verify final selection against manufacturer submittal and project requirements.
+Fill Valve / Backflow Preventer,Taco,Any,Any,N/A,N/A,N/A,Taco (combination),N/A,0,5000000,"1/2""",1,T3450T2,T3450T2,"Taco (combination), 1/2 inch connection.",Verify final selection against manufacturer submittal and project requirements.
+Fill Valve / Backflow Preventer,Taco,Any,Any,N/A,N/A,N/A,Taco (old style),N/A,0,5000000,"1/2""",2,T3293 + W9DM3D,T3293 + W9DM3D,"Taco (old style), 1/2 inch connection.",Verify final selection against manufacturer submittal and project requirements.
