@@ -24,7 +24,7 @@ def img64(path):
 def clean(txt):
     return html_lib.escape(str(txt)).replace('\\n','<br/>').replace('/n','<br/>').replace('\n','<br/>')
 
-def filt(df,comp,btu,sys_type,conn,fuel,flue,coil,fillopt):
+def filt(df,comp,btu,sys_type,conn,fuel,flue,coil,fillopt,boiler_manufacturer):
     f=df[df.component==comp].copy()
     if comp=='Expansion Tank': f=f[f.system_type==sys_type]
     if comp=='Pump Isolation Flanges': f=f[f.connection_type==conn]
@@ -37,7 +37,7 @@ def filt(df,comp,btu,sys_type,conn,fuel,flue,coil,fillopt):
 
 df=pd.read_csv(DB)
 st.title('THE BOILER WIZARD')
-st.caption('Hot Water / Hydronic equipment selector')
+st.caption('Apple II style hydronic equipment selector')
 
 with st.sidebar:
     if BANNER_GIF.exists():
@@ -46,6 +46,7 @@ with st.sidebar:
         st.error('Missing boiler_wizard_shimmer.gif')
     st.header('System Inputs')
     btu=st.number_input('BTU Capacity / Boiler Output BTU',0,5000000,120000,5000)
+    boiler_manufacturer=st.selectbox('Boiler Manufacturer',sorted(df[df.component=='Boiler'].manufacturer.dropna().unique()))
     fuel=st.selectbox('Boiler Fuel Type',['Natural Gas','Oil'])
     flue='N/A'; coil='N/A'
     if fuel=='Oil':
@@ -58,7 +59,7 @@ with st.sidebar:
 
 rows=[]
 for comp in ORDER:
-    m=filt(df,comp,int(btu),sys_type,conn,fuel,flue,coil,fillopt)
+    m=filt(df,comp,int(btu),sys_type,conn,fuel,flue,coil,fillopt,boiler_manufacturer)
     if m.empty:
         rows.append({'Component':comp,'Qty':'','Manufacturer':'','Model #':'No match','Part #':'No match','Pipe Size':'N/A','BTU Range':'No matching range','Description':'Add a matching rule.'})
     else:
@@ -68,7 +69,7 @@ if any(x['Component']=='Expansion Tank' and x['Model #'] in PSHT for x in rows):
     rows.append({'Component':'Expansion Tank Service Valve','Qty':1,'Manufacturer':'Webstone','Model #':'WH41672','Part #':'WH41672','Pipe Size':'1/2"','BTU Range':'N/A','Description':'Automatically included with PSHT expansion tank selection.'})
 sel=pd.DataFrame(rows)
 
-m=filt(df,hi,int(btu),sys_type,conn,fuel,flue,coil,fillopt)
+m=filt(df,hi,int(btu),sys_type,conn,fuel,flue,coil,fillopt,boiler_manufacturer)
 if m.empty:
     title=hi.upper(); body=f'NO MATCH\\n{int(btu):,} BTU'
 else:
