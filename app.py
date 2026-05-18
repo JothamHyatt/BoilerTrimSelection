@@ -37,7 +37,7 @@ def filt(df,comp,btu,sys_type,conn,fuel,flue,coil,fillopt,boiler_manufacturer):
 
 df=pd.read_csv(DB)
 st.title('THE BOILER WIZARD')
-st.caption('Apple II style hydronic equipment selector')
+st.caption('Hydronic Sales made Simple, Stupid')
 
 with st.sidebar:
     if BANNER_GIF.exists():
