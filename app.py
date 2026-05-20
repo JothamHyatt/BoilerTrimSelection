@@ -38,7 +38,7 @@ def filt(df,comp,btu,sys_type,conn,fuel,flue,coil,fillopt,boiler_manufacturer,ai
 
 df=pd.read_csv(DB)
 st.title('THE BOILER WIZARD')
-st.caption('Hydronic Sales Made Simple, Stupid.')
+st.caption('            Hydronic Sales Made Simple, Stupid.')
 
 with st.sidebar:
     if BANNER_GIF.exists():
