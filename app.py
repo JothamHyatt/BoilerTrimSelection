@@ -29,6 +29,7 @@ def filt(df,comp,btu,sys_type,conn,fuel,flue,coil,fillopt,boiler_manufacturer,ai
     if comp=='Expansion Tank': f=f[f.system_type==sys_type]
     if comp=='Pump Isolation Flanges': f=f[f.connection_type==conn]
     if comp=='Boiler':
+        f = f[f.manufacturer == boiler_manufacturer]
         f=f[f.fuel_type==fuel]
         if fuel=='Oil': f=f[(f.flue_type==flue)&(f.tankless_coil==coil)]
     if comp=='Air Separator': f=f[f.manufacturer==air_sep_manufacturer]
