@@ -69,10 +69,12 @@ with st.sidebar:
     if fuel=='Oil':
         flue=st.selectbox('Boiler Flue Type',['Top Flue','Rear Flue'])
         coil=st.selectbox('Tankless Coil',['Without Tankless Coil','With Tankless Coil']) 
+        )
         
     air_sep_manufacturer=st.selectbox(
         'Air Separator Manufacturer',
         sorted([x for x in df[df.component=='Air Separator'].manufacturer.dropna().unique() if x!='N/A'])
+    )
         
     fillopt=st.selectbox(
         'Fill Valve / Backflow Preventer',
