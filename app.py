@@ -115,10 +115,15 @@ with st.sidebar:
                 sorted(mv_df.connection_type.dropna().unique())
             )
 
-    visible_order=[c for c in ORDER if not (c=='Mixing Valve' and coil!='With Tankless Coil')]
-    hi=st.selectbox('Highlighted Component',visible_order)
 
-    hi=st.selectbox('Highlighted Component',ORDER)
+visible_order=[c for c in ORDER if not (c=='Mixing Valve' and coil!='With Tankless Coil')]
+
+hi=st.selectbox(
+    'Highlighted Component',
+    visible_order,
+    key='highlighted_component_selector'
+)
+
 
 rows=[]
 for comp in ORDER:
