@@ -1,6 +1,6 @@
-# The Boiler Wizard - Patched Working App
+# The Boiler Wizard - Air Separator Dropdown Reordered
 
-This package contains your uploaded app.py with targeted fixes only. It is not a completely new app.
+This package contains the same targeted app with the Air Separator Manufacturer dropdown moved lower in the sidebar.
 
 Included:
 - app.py
@@ -13,13 +13,12 @@ Not included:
 
 Keep your existing CSV and GIF assets in the same folder as this app.py.
 
-Fixes included:
-- Restored/kept Boiler Manufacturer dropdown.
-- Restored/kept Air Separator Manufacturer dropdown.
-- Boiler selection is locked to the selected boiler manufacturer before BTU sorting.
-- Air Separator selection is locked to selected air separator manufacturer.
+Change made:
+- Air Separator Manufacturer dropdown moved below the boiler fuel/flue/tankless coil section and above Fill Valve / Backflow Preventer.
+
+Existing fixes preserved:
+- Boiler Manufacturer filter remains active.
+- Air Separator Manufacturer filter remains active.
 - Mixing Valve remains conditional for With Tankless Coil.
-- Mixing Valve filters by Manufacturer, Connection Size, and Connection Type.
-- Highlighted Component dropdown uses visible_order and a unique key to avoid Streamlit duplicate element errors.
-- Caption changed to Hydronic equipment selector.
-- Text columns are stripped after CSV load to avoid trailing-space filter bugs.
+- Highlighted Component uses visible_order with a unique key.
+- Text columns are stripped after CSV load.
