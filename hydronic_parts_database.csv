@@ -88,3 +88,5 @@ Fill Valve / Backflow Preventer,Taco,Any,Any,N/A,N/A,N/A,Taco (combination),N/A,
 Fill Valve / Backflow Preventer,Taco,Any,Any,N/A,N/A,N/A,Taco (old style),N/A,0,5000000,"1/2""",2,T3293 + W9DM3D,T3293 + W9DM3D,"Taco (old style), 1/2 inch connection.",Verify final selection against manufacturer submittal and project requirements.
 Mixing Valve,Caleffi,Any,Press,N/A,N/A,N/A,N/A,N/A,0,5000000,"3/4""",1,C521516A,C521516A,"3/4"" Press Mixing Valve w/ Gauge",Verify final selection against manufacturer submittal and project requirements.
 Mixing Valve,Caleffi,Any,Sweat,N/A,N/A,N/A,N/A,N/A,0,5000000,"3/4""",1,C521519A,C521519A,"3/4"" Sweat Mixing Valve w/ Gauge",Verify final selection against manufacturer submittal and project requirements.
+Oil Filter,General Filter,Any,Any,N/A,N/A,N/A,N/A,N/A,0,5000000,"3/8""",1,1A-25B,GEN1300,1A-25B Standard Oil Filter,Verify final selection against manufacturer submittal and project requirements.
+Oil Filter,Tigerloop Ultra,Any,Any,N/A,N/A,N/A,N/A,N/A,0,5000000,"1/4""",1,S220-8,WS2208,Tigerloop Ultra Oil De-aerator and Spin-On Filter,Verify final selection against manufacturer submittal and project requirements.
