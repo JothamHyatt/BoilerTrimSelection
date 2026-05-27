@@ -107,7 +107,7 @@ for _col in ['component', 'manufacturer', 'system_type', 'connection_type', 'fue
         df[_col] = df[_col].astype(str).str.strip()
 
 st.title('THE BOILER WIZARD')
-st.caption('THE LOOP IS CLOSED. THE CHOICE IS MADE. RESISTANCE IS FUTILE. /NSCROLL DOWN FOR EQUIPMENT BREAKDOWN')
+st.caption('THE LOOP IS CLOSED. THE CHOICE IS MADE. RESISTANCE IS FUTILE. \nSCROLL DOWN FOR EQUIPMENT BREAKDOWN')
 
 with st.sidebar:
     if BANNER_GIF.exists():
