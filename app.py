@@ -48,34 +48,75 @@ with st.sidebar:
         st.image(str(BANNER_GIF), use_container_width=True)
     else:
         st.error('Missing boiler_wizard_shimmer.gif')
+
     st.header('System Inputs')
+
     btu=st.number_input('BTU Capacity / Boiler Output BTU',0,5000000,120000,5000)
+
+    boiler_manufacturer=st.selectbox(
+        'Boiler Manufacturer',
+        sorted([x for x in df[df.component=='Boiler'].manufacturer.dropna().unique() if x!='N/A'])
+    )
+
+    air_sep_manufacturer=st.selectbox(
+        'Air Separator Manufacturer',
+        sorted([x for x in df[df.component=='Air Separator'].manufacturer.dropna().unique() if x!='N/A'])
+    )
+
     fuel=st.selectbox('Boiler Fuel Type',['Natural Gas','Oil'])
-    flue='N/A'; coil='N/A'
+
+    flue='N/A'
+    coil='N/A'
+
     if fuel=='Oil':
         flue=st.selectbox('Boiler Flue Type',['Top Flue','Rear Flue'])
         coil=st.selectbox('Tankless Coil',['Without Tankless Coil','With Tankless Coil'])
-    fillopt=st.selectbox('Fill Valve / Backflow Preventer',sorted([x for x in df[df.component==FILL].selection_option.dropna().unique() if x!='N/A']))
-    sys_type=st.selectbox('Expansion Tank System Type',sorted([x for x in df[df.component=='Expansion Tank'].system_type.dropna().unique() if x!='Any']))
+
+    fillopt=st.selectbox(
+        'Fill Valve / Backflow Preventer',
+        sorted([x for x in df[df.component==FILL].selection_option.dropna().unique() if x!='N/A'])
+    )
+
+    sys_type=st.selectbox(
+        'Expansion Tank System Type',
+        sorted([x for x in df[df.component=='Expansion Tank'].system_type.dropna().unique() if x!='Any'])
+    )
+
     conn=st.selectbox('Pump Isolation Flange Connection Type',['Press','Sweat','Threaded'])
+
     mixing_valve_manufacturer=None
     mixing_valve_connection_size=None
     mixing_valve_connection_type=None
 
     if coil=='With Tankless Coil':
         st.subheader('DHW Mixing Valve')
-        mixing_valve_manufacturer = st.selectbox(
-            'Mixing Valve Manufacturer',
-            sorted(df[df.component=='Mixing Valve'].manufacturer.dropna().unique())
-        )
-        mixing_valve_connection_size = st.selectbox(
-            'Mixing Valve Size',
-            sorted(df[df.component=='Mixing Valve'].pipe_size.dropna().unique())
-        )
-        mixing_valve_connection_type = st.selectbox(
-            'Mixing Valve Connection Type',
-            sorted(df[df.component=='Mixing Valve'].connection_type.dropna().unique())
-        )
+
+        mv_df=df[df.component=='Mixing Valve'].copy()
+
+        if mv_df.empty:
+            st.warning('No Mixing Valve rows found in hydronic_parts_database.csv')
+        else:
+            mixing_valve_manufacturer=st.selectbox(
+                'Mixing Valve Manufacturer',
+                sorted(mv_df.manufacturer.dropna().unique())
+            )
+
+            mv_df=mv_df[mv_df.manufacturer==mixing_valve_manufacturer]
+
+            mixing_valve_connection_size=st.selectbox(
+                'Mixing Valve Connection Size',
+                sorted(mv_df.pipe_size.dropna().unique())
+            )
+
+            mv_df=mv_df[mv_df.pipe_size==mixing_valve_connection_size]
+
+            mixing_valve_connection_type=st.selectbox(
+                'Mixing Valve Connection Type',
+                sorted(mv_df.connection_type.dropna().unique())
+            )
+
+    visible_order=[c for c in ORDER if not (c=='Mixing Valve' and coil!='With Tankless Coil')]
+    hi=st.selectbox('Highlighted Component',visible_order)
 
     hi=st.selectbox('Highlighted Component',ORDER)
 
