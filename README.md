@@ -1,6 +1,6 @@
-# The Boiler Wizard - Air Separator Dropdown Reordered
+# The Boiler Wizard - Oil Filter Update
 
-This package contains the same targeted app with the Air Separator Manufacturer dropdown moved lower in the sidebar.
+This app package adds an Oil Filter manufacturer dropdown for oil-fired boilers.
 
 Included:
 - app.py
@@ -13,12 +13,20 @@ Not included:
 
 Keep your existing CSV and GIF assets in the same folder as this app.py.
 
-Change made:
-- Air Separator Manufacturer dropdown moved below the boiler fuel/flue/tankless coil section and above Fill Valve / Backflow Preventer.
+New feature:
+- Oil Filter appears only when Boiler Fuel Type = Oil.
+- Oil Filter uses Manufacturer dropdown only.
+- No Oil Filter connection size/type dropdowns were added.
+- Oil Filter appears in Selected Equipment Breakdown and Highlighted Component only for oil boilers.
 
-Existing fixes preserved:
-- Boiler Manufacturer filter remains active.
-- Air Separator Manufacturer filter remains active.
+Existing behavior preserved:
+- Boiler Manufacturer filtering.
+- Air Separator Manufacturer filtering.
+- Air Separator dropdown remains below boiler fuel/flue/tankless coil area.
 - Mixing Valve remains conditional for With Tankless Coil.
 - Highlighted Component uses visible_order with a unique key.
-- Text columns are stripped after CSV load.
+- Text columns are stripped after CSV load to avoid trailing-space filter bugs.
+
+CSV requirement:
+Add Oil Filter rows to hydronic_parts_database.csv with component = Oil Filter.
+Use broad BTU ranges, e.g. min_btu = 0 and max_btu = 5000000.
