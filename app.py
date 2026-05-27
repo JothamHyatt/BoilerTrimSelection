@@ -59,7 +59,6 @@ with st.sidebar:
     )
 
     
-    )
 
     fuel=st.selectbox('Boiler Fuel Type',['Natural Gas','Oil'])
 
