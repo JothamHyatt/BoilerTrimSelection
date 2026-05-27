@@ -41,37 +41,60 @@ def filt(df,comp,btu,sys_type,conn,fuel,flue,coil,fillopt,mix_mfr=None,mix_size=
 
 df=pd.read_csv(DB)
 st.title('THE BOILER WIZARD')
-st.caption('Apple II style hydronic equipment selector')
+st.caption('Hydronic Sales Made Simple, Stupid')
 
 with st.sidebar:
+
     if BANNER_GIF.exists():
         st.image(str(BANNER_GIF), use_container_width=True)
-    else:
-        st.error('Missing boiler_wizard_shimmer.gif')
+
     st.header('System Inputs')
-    btu=st.number_input('BTU Capacity / Boiler Output BTU',0,5000000,120000,5000)
-    fuel=st.selectbox('Boiler Fuel Type',['Natural Gas','Oil'])
+
+    btu = st.number_input(...)
+
+    # ✅ Boiler Manufacturer (keep this)
+    boiler_manufacturer = st.selectbox(
+        'Boiler Manufacturer',
+        sorted(df[df.component=='Boiler'].manufacturer.dropna().unique())
+    )
+
+    # ✅ Air Separator Manufacturer (keep this)
+    air_sep_manufacturer = st.selectbox(
+        'Air Separator Manufacturer',
+        sorted(df[df.component=='Air Separator'].manufacturer.dropna().unique())
+    )
+
+    fuel = st.selectbox('Boiler Fuel Type',['Natural Gas','Oil'])
+
     flue='N/A'; coil='N/A'
     if fuel=='Oil':
-        flue=st.selectbox('Boiler Flue Type',['Top Flue','Rear Flue'])
-        coil=st.selectbox('Tankless Coil',['Without Tankless Coil','With Tankless Coil'])
-    fillopt=st.selectbox('Fill Valve / Backflow Preventer',sorted([x for x in df[df.component==FILL].selection_option.dropna().unique() if x!='N/A']))
-    sys_type=st.selectbox('Expansion Tank System Type',sorted([x for x in df[df.component=='Expansion Tank'].system_type.dropna().unique() if x!='Any']))
-    conn=st.selectbox('Pump Isolation Flange Connection Type',['Press','Sweat','Threaded'])
+        flue = st.selectbox(...)
+        coil = st.selectbox(...)
+
+    fillopt = st.selectbox(...)
+
+    sys_type = st.selectbox(...)
+
+    conn = st.selectbox('Pump Isolation Flange Connection Type',['Press','Sweat','Threaded'])
+
+    # ✅ Mixing valve logic (AFTER coil is defined)
     mixing_valve_manufacturer=None
     mixing_valve_connection_size=None
     mixing_valve_connection_type=None
 
-    if coil=='With Tankless Coil':
+    if coil == 'With Tankless Coil':
         st.subheader('DHW Mixing Valve')
+
         mixing_valve_manufacturer = st.selectbox(
             'Mixing Valve Manufacturer',
             sorted(df[df.component=='Mixing Valve'].manufacturer.dropna().unique())
         )
+
         mixing_valve_connection_size = st.selectbox(
             'Mixing Valve Size',
             sorted(df[df.component=='Mixing Valve'].pipe_size.dropna().unique())
         )
+
         mixing_valve_connection_type = st.selectbox(
             'Mixing Valve Connection Type',
             sorted(df[df.component=='Mixing Valve'].connection_type.dropna().unique())
