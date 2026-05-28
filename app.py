@@ -295,7 +295,7 @@ loop();
     )
 else:
     components.html(html, height=625, scrolling=False)
-``
+
 with right:
     st.subheader('Highlighted Selection')
     st.dataframe(sel[sel.Component==hi],use_container_width=True,hide_index=True)
