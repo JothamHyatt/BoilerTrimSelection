@@ -144,7 +144,7 @@ with left:
     else:
         p=POS[hi]; gif=img64(DIAGRAM_GIF); th=clean(title); bh=clean(body)
         html=f'''<style>.diagram-wrap{{background:#000;border:1px solid #00cc44;box-shadow:0 0 12px rgba(57,255,85,.35)}}.diagram-svg{{display:block;width:100%;height:auto}}.pulse{{fill:none;stroke:#39ff55;stroke-width:3;animation:pulse 1.1s infinite}}@keyframes pulse{{0%{{opacity:.45;stroke-width:2}}50%{{opacity:1;stroke-width:5}}100%{{opacity:.45;stroke-width:2}}}}.callout{{color:#39ff55;background:rgba(0,0,0,.84);border:1px solid #39ff55;padding:8px 11px;font-family:Courier New,monospace;font-size:15px}}</style><div class='diagram-wrap'><svg class='diagram-svg' viewBox='0 0 {IMG_W} {IMG_H}'><image href='data:image/gif;base64,{gif}' x='0' y='0' width='{IMG_W}' height='{IMG_H}'/><circle class='pulse' cx='{p['cx']}' cy='{p['cy']}' r='{p['r']}'/><foreignObject x='{p['callout_x']}' y='{p['callout_y']}' width='390' height='230'><div xmlns='http://www.w3.org/1999/xhtml' class='callout'><b>{th}</b><br/>{bh}<br/><span>&gt; SELECTED BY INPUTS</span></div></foreignObject></svg></div>'''
-        if play_game:
+if play_game:
     components.html(
         '''
 <html>
