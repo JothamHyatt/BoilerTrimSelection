@@ -126,15 +126,235 @@ with left:
         p=POS[hi]; gif=img64(DIAGRAM_GIF); th=clean(title); bh=clean(body)
         html=f'''<style>.diagram-wrap{{background:#000;border:1px solid #00cc44;box-shadow:0 0 12px rgba(57,255,85,.35)}}.diagram-svg{{display:block;width:100%;height:auto}}.pulse{{fill:none;stroke:#39ff55;stroke-width:3;animation:pulse 1.1s infinite}}@keyframes pulse{{0%{{opacity:.45;stroke-width:2}}50%{{opacity:1;stroke-width:5}}100%{{opacity:.45;stroke-width:2}}}}.callout{{color:#39ff55;background:rgba(0,0,0,.84);border:1px solid #39ff55;padding:8px 11px;font-family:Courier New,monospace;font-size:15px}}</style><div class='diagram-wrap'><svg class='diagram-svg' viewBox='0 0 {IMG_W} {IMG_H}'><image href='data:image/gif;base64,{gif}' x='0' y='0' width='{IMG_W}' height='{IMG_H}'/><circle class='pulse' cx='{p['cx']}' cy='{p['cy']}' r='{p['r']}'/><foreignObject x='{p['callout_x']}' y='{p['callout_y']}' width='390' height='230'><div xmlns='http://www.w3.org/1999/xhtml' class='callout'><b>{th}</b><br/>{bh}<br/><span>&gt; SELECTED BY INPUTS</span></div></foreignObject></svg></div>'''
         if play_game:
-            components.html("""<html><body style='margin:0;background:black;overflow:hidden;'><canvas id='game' width='980' height='500'></canvas><script>const canvas=document.getElementById('game');const ctx=canvas.getContext('2d');let wizard={x:80,y:380,vy:0,jumping:false};let gravity=0.7;let bob=0;let obstacles=[];let speed=6;let score=0;let gameOver=false;function spawnObstacle(){let type=Math.random()>0.5?'fire':'water';obstacles.push({x:980,y:400,w:30,h:40,type:type});}function update(){if(gameOver)return;score++;if(score%90===0){spawnObstacle();}if(score%300===0){speed+=0.5;}if(wizard.jumping&&wizard.y>=380){wizard.vy=-14;}wizard.jumping=false;wizard.vy+=gravity;wizard.y+=wizard.vy;if(wizard.y>380){wizard.y=380;wizard.vy=0;}obstacles.forEach(o=>o.x-=speed);for(let o of obstacles){if(wizard.x<o.x+o.w&&wizard.x+25>o.x&&wizard.y<o.y+o.h){gameOver=true;}}bob+=0.1;}function drawWizard(){let yOffset=Math.sin(bob)*3;ctx.fillStyle='#00FF00';ctx.fillRect(wizard.x,wizard.y+yOffset,25,25);let glow=Math.sin(Date.now()*0.01)*5+10;ctx.fillStyle='rgba(0,255,0,0.3)';ctx.beginPath();ctx.arc(wizard.x+30,wizard.y+10+yOffset,glow,0,Math.PI*2);ctx.fill();ctx.fillStyle='#00FF00';ctx.fillRect(wizard.x+28,wizard.y+yOffset,4,20);for(let i=0;i<3;i++){ctx.fillStyle='rgba(0,255,0,0.8)';ctx.fillRect(wizard.x+30+Math.random()*6,wizard.y+Math.random()*20+yOffset,2,2);}}function drawCRT(){ctx.fillStyle='rgba(0,0,0,0.2)';for(let i=0;i<500;i+=4){ctx.fillRect(0,i,980,1);}let flicker=Math.random()*0.05;ctx.fillStyle='rgba(0,255,0,'+flicker+')';ctx.fillRect(0,0,980,500);}function draw(){ctx.fillStyle='black';ctx.fillRect(0,0,980,500);ctx.strokeStyle='#00FF00';ctx.beginPath();ctx.moveTo(0,420);ctx.lineTo(980,420);ctx.stroke();drawWizard();obstacles.forEach(o=>{ctx.fillStyle=o.type==='fire'?'red':'cyan';ctx.fillRect(o.x,o.y,o.w,o.h);});ctx.fillStyle='#00FF00';ctx.font='18px monospace';ctx.fillText('BTU Stability: '+score,20,30);if(gameOver){ctx.font='36px monospace';ctx.fillText('SYSTEM FAILURE',320,200);ctx.font='18px monospace';ctx.fillText('Press R to Reset',390,240);}if(score>1500){ctx.font='32px monospace';ctx.fillText('SYSTEM PERFECTED',300,200);gameOver=true;}drawCRT();}function loop(){update();draw();requestAnimationFrame(loop);}document.addEventListener('keydown',e=>{if(e.code==='Space'){wizard.jumping=true;}if(e.code==='KeyR'){location.reload();}});loop();</script></body></html>""",height=520)
-        else:
-            components.html(html,height=625,scrolling=False)
-with right:
-    st.subheader('Highlighted Selection')
-    st.dataframe(sel[sel.Component==hi],use_container_width=True,hide_index=True)
+    components.html("""
+    <html>
+    <body style="margin:0;background:black;">
+    <canvas id="game" width="980" height="500"></canvas>
 
-st.subheader('Selected Equipment Breakdown')
-st.dataframe(sel,use_container_width=True,hide_index=True)
-st.download_button('Download Selected Equipment Breakdown',data=sel.to_csv(index=False),file_name='selected_equipment_breakdown.csv',mime='text/csv')
-st.subheader('Available Ranges for Highlighted Component')
-st.dataframe(df[df.component==hi],use_container_width=True,hide_index=True)
+    <script>
+    const canvas = document.getElementById("game");
+    const ctx = canvas.getContext("2d");
+
+    // --- AUDIO ---
+    const AudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function beep(freq, duration){
+        const osc = AudioCtx.createOscillator();
+        const gain = AudioCtx.createGain();
+        osc.frequency.value = freq;
+        osc.connect(gain);
+        gain.connect(AudioCtx.destination);
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(0.0001, AudioCtx.currentTime + duration);
+        osc.stop(AudioCtx.currentTime + duration);
+    }
+
+    // --- WIZARD ---
+    let wizard = {x:80, y:380, vy:0};
+    let gravity = 0.7;
+    let frame = 0;
+
+    // Jump trail
+    let trail = [];
+
+    // --- GAME ---
+    let obstacles = [];
+    let speed = 6;
+    let score = 0;
+    let gameOver = false;
+
+    let explosion = [];
+
+    function spawnObstacle(){
+        let type = Math.random() > 0.5 ? "fire" : "water";
+        obstacles.push({x:980,y:400,w:35,h:40,type:type});
+    }
+
+    function update(){
+        if(gameOver){
+            updateExplosion();
+            return;
+        }
+
+        score++;
+        frame++;
+
+        if(score % 90 === 0) spawnObstacle();
+        if(score % 300 === 0) speed += 0.5;
+
+        wizard.vy += gravity;
+        wizard.y += wizard.vy;
+
+        if(wizard.y > 380){
+            wizard.y = 380;
+            wizard.vy = 0;
+        }
+
+        // Trail
+        if(wizard.y < 380){
+            trail.push({x:wizard.x, y:wizard.y, life:20});
+        }
+
+        trail.forEach(t => t.life--);
+        trail = trail.filter(t => t.life > 0);
+
+        obstacles.forEach(o => o.x -= speed);
+
+        // --- BETTER COLLISION ---
+        for(let o of obstacles){
+            let hitX = wizard.x < o.x + o.w && wizard.x + 25 > o.x;
+            let onGround = wizard.y > 360;
+
+            if(hitX && onGround){
+                triggerExplosion();
+                beep(120,0.2);
+                gameOver = true;
+            }
+        }
+    }
+
+    function triggerExplosion(){
+        for(let i=0;i<30;i++){
+            explosion.push({
+                x:wizard.x+10,
+                y:wizard.y+10,
+                vx:(Math.random()-0.5)*8,
+                vy:(Math.random()-0.5)*8,
+                life:30
+            });
+        }
+    }
+
+    function updateExplosion(){
+        explosion.forEach(p=>{
+            p.x += p.vx;
+            p.y += p.vy;
+            p.life--;
+        });
+        explosion = explosion.filter(p=>p.life>0);
+    }
+
+    function drawTrail(){
+        trail.forEach(t=>{
+            ctx.fillStyle = "rgba(0,255,0,"+(t.life/20)+")";
+            ctx.fillRect(t.x, t.y, 20, 5);
+        });
+    }
+
+    function drawWizard(){
+        let x = wizard.x;
+        let y = wizard.y;
+
+        // cloak animation
+        let cloakOffset = (frame % 20 < 10) ? 0 : 3;
+
+        ctx.fillStyle="#00FF00";
+
+        // body
+        ctx.fillRect(x,y,20,20);
+
+        // cloak flap
+        ctx.fillRect(x-cloakOffset,y+10,cloakOffset,10);
+
+        // hat
+        ctx.beginPath();
+        ctx.moveTo(x,y);
+        ctx.lineTo(x+10,y-10);
+        ctx.lineTo(x+20,y);
+        ctx.fill();
+
+        // staff
+        ctx.fillRect(x+22,y,3,18);
+
+        // glowing orb
+        let glow = Math.sin(Date.now()*0.01)*5 + 8;
+        ctx.fillStyle="rgba(0,255,0,0.4)";
+        ctx.beginPath();
+        ctx.arc(x+24,y,glow,0,Math.PI*2);
+        ctx.fill();
+    }
+
+    function drawExplosion(){
+        explosion.forEach(p=>{
+            ctx.fillStyle="orange";
+            ctx.fillRect(p.x,p.y,4,4);
+        });
+    }
+
+    function drawObstacles(){
+        obstacles.forEach(o=>{
+            if(o.type==="fire"){
+                ctx.fillStyle="orange";
+                ctx.fillRect(o.x,o.y,o.w,o.h);
+                ctx.fillStyle="red";
+                ctx.fillRect(o.x+5,o.y-10,o.w-10,10);
+            } else {
+                ctx.fillStyle="cyan";
+                ctx.fillRect(o.x,o.y,o.w,o.h);
+                ctx.fillStyle="#00FFFF";
+                ctx.fillRect(o.x,o.y-5,o.w,5);
+            }
+        });
+    }
+
+    function drawCRT(){
+        ctx.fillStyle="rgba(0,0,0,0.2)";
+        for(let i=0;i<500;i+=4){
+            ctx.fillRect(0,i,980,1);
+        }
+    }
+
+    function draw(){
+        ctx.fillStyle="black";
+        ctx.fillRect(0,0,980,500);
+
+        ctx.strokeStyle="#00FF00";
+        ctx.beginPath();
+        ctx.moveTo(0,420);
+        ctx.lineTo(980,420);
+        ctx.stroke();
+
+        drawTrail();
+        drawWizard();
+        drawObstacles();
+        drawExplosion();
+
+        ctx.fillStyle="#00FF00";
+        ctx.font="18px monospace";
+        ctx.fillText("BTU's Accumulated: "+score,20,30);
+        ctx.fillText("PRESS SPACE TO JUMP",650,30);
+
+        if(gameOver){
+            ctx.font="36px monospace";
+            ctx.fillText("SYSTEM FAILURE",320,200);
+            ctx.font="18px monospace";
+            ctx.fillText("Press R to Restart",360,240);
+        }
+
+        drawCRT();
+    }
+
+    function loop(){
+        update();
+        draw();
+        requestAnimationFrame(loop);
+    }
+
+    document.addEventListener("keydown", e=>{
+        if(e.code==="Space"){
+            if(wizard.y >= 380){
+                wizard.vy = -14;
+                beep(400,0.1); // jump sound
+            }
+        }
+        if(e.code==="KeyR"){
+            location.reload();
+        }
+    });
+
+    loop();
+    </script>
+    </body>
+    </html>
+    """, height=520)
+``
