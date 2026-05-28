@@ -33,9 +33,7 @@ h1 {
 """, unsafe_allow_html=True)
 
 
-div[data-testid="stCaptionContainer"] {
-    font-family: 'Uncial Antiqua', cursive !important;
-}
+
 
 
 DB=Path('hydronic_parts_database.csv')
