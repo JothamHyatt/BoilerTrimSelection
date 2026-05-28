@@ -7,9 +7,6 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 st.set_page_config(page_title='The Boiler Wizard', layout='wide', initial_sidebar_state='expanded')
-
-
-
 DB=Path('hydronic_parts_database.csv')
 BANNER_GIF=Path('boiler_wizard_shimmer.gif')
 DIAGRAM_GIF=Path('hot_water_hydronic_system_selector_demo.gif')
@@ -53,33 +50,9 @@ df.columns=df.columns.str.strip()
 for _col in ['component','manufacturer','system_type','connection_type','fuel_type','flue_type','tankless_coil','selection_option','pipe_size']:
     if _col in df.columns:
         df[_col]=df[_col].astype(str).str.strip()
-
-
-st.markdown("""
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
-
-<div style="text-align:center; margin-bottom:10px;">
-    <h1 style="
-        font-family: 'Cinzel', serif;
-        color:#39ff55;
-        letter-spacing:4px;
-        text-shadow: 0 0 10px rgba(57,255,85,0.7);
-        margin-bottom:5px;
-    ">
-        THE BOILER WIZARD
-    </h1>
-
-    <div style="
-        font-family: 'Uncial Antiqua', cursive;
-        color:#39ff55;
-        font-size:14px;
-    ">
-        Hydronic equipment selector
-    </div>
-</div>
-""", unsafe_allow_html=True)
-
-
+st.title('THE BOILER WIZARD')
+st.caption('A Mystical, Magical, Hot Water Hydronic equipment selection application for residential applications')
+st.caption('Scroll down for selections')
 
 
 with st.sidebar:
