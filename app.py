@@ -7,6 +7,30 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 st.set_page_config(page_title='The Boiler Wizard', layout='wide', initial_sidebar_state='expanded')
+st.markdown("""
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
+
+<style>
+/* Title */
+h1 {
+    font-family: 'Cinzel', serif !important;
+    letter-spacing: 2px;
+}
+
+/* Caption (subtitle) */
+.caption, .stCaption {
+    font-family: 'Uncial Antiqua', cursive !important;
+    font-size: 14px;
+    color: #39ff55;
+}
+
+/* Optional: make it glow slightly */
+h1 {
+    color: #39ff55;
+    text-shadow: 0 0 8px rgba(57,255,85,0.6);
+}
+</style>
+""", unsafe_allow_html=True)
 DB=Path('hydronic_parts_database.csv')
 BANNER_GIF=Path('boiler_wizard_shimmer.gif')
 DIAGRAM_GIF=Path('hot_water_hydronic_system_selector_demo.gif')
