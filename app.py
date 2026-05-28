@@ -13,8 +13,11 @@ st.markdown("""
 <style>
 
 /* ✅ Title (Streamlit specific) */
-div[data-testid="stHeader"] h1 {
+
+div[data-testid="stHeader"] h1 * {
     font-family: 'Cinzel', serif !important;
+}
+
     letter-spacing: 3px;
     color: #39ff55;
     text-shadow: 0 0 8px rgba(57,255,85,0.6);
