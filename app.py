@@ -8,27 +8,25 @@ import streamlit.components.v1 as components
 
 st.set_page_config(page_title='The Boiler Wizard', layout='wide', initial_sidebar_state='expanded')
 st.markdown("""
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Uncial+Antiqua&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Uncial+Antiqua&display=swap" rel="stylesheet">
 
 <style>
-/* Title */
-h1 {
+
+/* ✅ Title (Streamlit specific) */
+div[data-testid="stHeader"] h1 {
     font-family: 'Cinzel', serif !important;
-    letter-spacing: 2px;
-}
-
-/* Caption (subtitle) */
-.caption, .stCaption {
-    font-family: 'Uncial Antiqua', cursive !important;
-    font-size: 14px;
-    color: #39ff55;
-}
-
-/* Optional: make it glow slightly */
-h1 {
+    letter-spacing: 3px;
     color: #39ff55;
     text-shadow: 0 0 8px rgba(57,255,85,0.6);
 }
+
+/* ✅ Caption (this is the correct selector) */
+div[data-testid="stCaption"] {
+    font-family: 'Uncial Antiqua', cursive !important;
+    color: #39ff55;
+    font-size: 14px;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
