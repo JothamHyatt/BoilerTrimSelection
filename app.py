@@ -31,6 +31,13 @@ h1 {
 }
 </style>
 """, unsafe_allow_html=True)
+
+
+div[data-testid="stCaptionContainer"] {
+    font-family: 'Uncial Antiqua', cursive !important;
+}
+
+
 DB=Path('hydronic_parts_database.csv')
 BANNER_GIF=Path('boiler_wizard_shimmer.gif')
 DIAGRAM_GIF=Path('hot_water_hydronic_system_selector_demo.gif')
