@@ -51,7 +51,9 @@ for _col in ['component','manufacturer','system_type','connection_type','fuel_ty
     if _col in df.columns:
         df[_col]=df[_col].astype(str).str.strip()
 st.title('THE BOILER WIZARD')
-st.caption('Hydronic equipment selector')
+st.caption('A Mystical, Magical, Hot Water Hydronic equipment selection application for residential applications')
+st.caption('Scroll down for selections')
+
 
 with st.sidebar:
     if BANNER_GIF.exists():
