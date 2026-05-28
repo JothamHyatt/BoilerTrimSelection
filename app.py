@@ -74,8 +74,7 @@ st.markdown("""
         color:#39ff55;
         font-size:14px;
     ">
-        A Mystical, Magical, Hot Water Hydronic equipment selection application for residential applications
-Scroll down for selections
+        Hydronic equipment selector
     </div>
 </div>
 """, unsafe_allow_html=True)
