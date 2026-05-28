@@ -12,27 +12,22 @@ st.markdown("""
 
 <style>
 
-/* ✅ Title (Streamlit specific) */
-
-div[data-testid="stHeader"] h1 * {
+/* ✅ Title */
+h1 {
     font-family: 'Cinzel', serif !important;
-}
-
     letter-spacing: 3px;
     color: #39ff55;
     text-shadow: 0 0 8px rgba(57,255,85,0.6);
 }
 
-/* ✅ Caption (this is the correct selector) */
-div[data-testid="stCaption"] {
+/* ✅ Caption */
+[data-testid="stCaption"] {
     font-family: 'Uncial Antiqua', cursive !important;
     color: #39ff55;
-    font-size: 14px;
 }
 
 </style>
 """, unsafe_allow_html=True)
-
 
 
 
