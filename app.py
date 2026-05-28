@@ -31,7 +31,7 @@ def filt(df,comp,btu,sys_type,conn,fuel,flue,coil,fillopt,boiler_manufacturer=No
     if comp=='Boiler':
         if boiler_manufacturer: f=f[f.manufacturer==boiler_manufacturer]
         f=f[f.fuel_type==fuel]
-        if fuel=='Natural Gas' and draft_hood_style and 'draft_hood_style' in f.columns:
+        if fuel=='Natural Gas' and draft_hood_style:
             f=f[f.draft_hood_style==draft_hood_style]
         if fuel=='Oil': f=f[(f.flue_type==flue)&(f.tankless_coil==coil)]
     if comp=='Air Separator':
@@ -66,12 +66,17 @@ with st.sidebar:
     if fuel=='Oil':
         flue=st.selectbox('Boiler Flue Type',['Top Flue','Rear Flue'])
         coil=st.selectbox('Tankless Coil',['Without Tankless Coil','With Tankless Coil'])
-
     if fuel=='Natural Gas':
-        draft_hood_style=st.selectbox(
-            'Boiler Draft Hood Style',
-            ['Low-profile','Standard Draft Hood']
-        )
+        gas_df = df[(df.component=='Boiler') & (df.fuel_type=='Natural Gas') & (df.manufacturer==boiler_manufacturer)]
+        if 'draft_hood_style' in gas_df.columns:
+            options = sorted(gas_df.draft_hood_style.dropna().unique())
+        else:
+            options = ['Low-profile','Standard Draft Hood']
+        if len(options)==1:
+            draft_hood_style = options[0]
+            st.selectbox('Boiler Draft Hood Style', options, index=0, disabled=True)
+        else:
+            draft_hood_style = st.selectbox('Boiler Draft Hood Style', options)
 
     air_sep_manufacturer=st.selectbox('Air Separator Manufacturer',sorted([x for x in df[df.component=='Air Separator'].manufacturer.dropna().unique() if x!='N/A']),key='air_separator_manufacturer_selector')
     fillopt=st.selectbox('Fill Valve / Backflow Preventer',sorted([x for x in df[df.component==FILL].selection_option.dropna().unique() if x!='N/A']))
