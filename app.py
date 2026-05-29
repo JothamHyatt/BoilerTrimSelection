@@ -63,7 +63,47 @@ with st.sidebar:
     st.header('System Inputs')
     btu=st.number_input('BTU Capacity / Boiler Output BTU',0,5000000,120000,5000)
     boiler_manufacturer=st.selectbox('Boiler Manufacturer',sorted([x for x in df[df.component=='Boiler'].manufacturer.dropna().unique() if x!='N/A']),key='boiler_manufacturer_selector')
-    fuel=st.selectbox('Boiler Fuel Type',['Natural Gas','Oil'])
+    # --- Manufacturer-driven VALID fuel filtering ---
+valid_fuels = []
+
+for f_opt in ['Natural Gas', 'Oil']:
+    test = filt(
+        df,
+        'Boiler',
+        int(btu),
+        sys_type,
+        conn,
+        f_opt,
+        flue='N/A',
+        coil='N/A',
+        fillopt=fillopt,
+        boiler_manufacturer=boiler_manufacturer
+    )
+
+    if not test.empty:
+        valid_fuels.append(f_opt)
+
+fuel_options = sorted(valid_fuels)
+
+if len(fuel_options) == 0:
+    fuel_options = ['No options']
+
+DEFAULT_FUEL = fuel_options[0]
+
+if "fuel_selector" not in st.session_state:
+    st.session_state["fuel_selector"] = DEFAULT_FUEL
+elif st.session_state["fuel_selector"] not in fuel_options:
+    st.session_state["fuel_selector"] = DEFAULT_FUEL
+
+fuel = st.selectbox(
+    'Boiler Fuel Type',
+    fuel_options,
+    key="fuel_selector"
+)
+
+if len(fuel_options) == 1:
+    fuel = DEFAULT_FUEL
+
     flue='N/A'; coil='N/A'; draft_hood_style=None
     if fuel=='Oil':
         flue=st.selectbox('Boiler Flue Type',['Top Flue','Rear Flue'])
