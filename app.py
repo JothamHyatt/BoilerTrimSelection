@@ -63,7 +63,27 @@ with st.sidebar:
     st.header('System Inputs')
     btu=st.number_input('BTU Capacity / Boiler Output BTU',0,5000000,120000,5000)
     boiler_manufacturer=st.selectbox('Boiler Manufacturer',sorted([x for x in df[df.component=='Boiler'].manufacturer.dropna().unique() if x!='N/A']),key='boiler_manufacturer_selector')
-    # --- Manufacturer-driven VALID fuel filtering ---
+    # FUEL_BLOCK_PLACEHOLDER
+    flue='N/A'; coil='N/A'; draft_hood_style=None
+    if fuel=='Oil':
+        flue=st.selectbox('Boiler Flue Type',['Top Flue','Rear Flue'])
+        coil=st.selectbox('Tankless Coil',['Without Tankless Coil','With Tankless Coil'])
+    if fuel=='Natural Gas':
+        gas_df = df[(df.component=='Boiler') & (df.fuel_type=='Natural Gas') & (df.manufacturer==boiler_manufacturer)]
+        if 'draft_hood_style' in gas_df.columns:
+            options = sorted(gas_df.draft_hood_style.dropna().unique())
+        else:
+            options = ['Low-profile','Standard Draft Hood']
+        if len(options)==1:
+            draft_hood_style = options[0]
+            st.selectbox('Boiler Draft Hood Style', options, index=0, disabled=True)
+        else:
+            draft_hood_style = st.selectbox('Boiler Draft Hood Style', options)
+
+    air_sep_manufacturer=st.selectbox('Air Separator Manufacturer',sorted([x for x in df[df.component=='Air Separator'].manufacturer.dropna().unique() if x!='N/A']),key='air_separator_manufacturer_selector')
+    fillopt=st.selectbox('Fill Valve / Backflow Preventer',sorted([x for x in df[df.component==FILL].selection_option.dropna().unique() if x!='N/A']))
+
+# --- Manufacturer-driven VALID fuel filtering (FIXED ORDER) ---
 valid_fuels = []
 
 for f_opt in ['Natural Gas', 'Oil']:
@@ -103,25 +123,6 @@ fuel = st.selectbox(
 
 if len(fuel_options) == 1:
     fuel = DEFAULT_FUEL
-
-    flue='N/A'; coil='N/A'; draft_hood_style=None
-    if fuel=='Oil':
-        flue=st.selectbox('Boiler Flue Type',['Top Flue','Rear Flue'])
-        coil=st.selectbox('Tankless Coil',['Without Tankless Coil','With Tankless Coil'])
-    if fuel=='Natural Gas':
-        gas_df = df[(df.component=='Boiler') & (df.fuel_type=='Natural Gas') & (df.manufacturer==boiler_manufacturer)]
-        if 'draft_hood_style' in gas_df.columns:
-            options = sorted(gas_df.draft_hood_style.dropna().unique())
-        else:
-            options = ['Low-profile','Standard Draft Hood']
-        if len(options)==1:
-            draft_hood_style = options[0]
-            st.selectbox('Boiler Draft Hood Style', options, index=0, disabled=True)
-        else:
-            draft_hood_style = st.selectbox('Boiler Draft Hood Style', options)
-
-    air_sep_manufacturer=st.selectbox('Air Separator Manufacturer',sorted([x for x in df[df.component=='Air Separator'].manufacturer.dropna().unique() if x!='N/A']),key='air_separator_manufacturer_selector')
-    fillopt=st.selectbox('Fill Valve / Backflow Preventer',sorted([x for x in df[df.component==FILL].selection_option.dropna().unique() if x!='N/A']))
     sys_type=st.selectbox('Expansion Tank System Type',sorted([x for x in df[df.component=='Expansion Tank'].system_type.dropna().unique() if x!='Any']))
     conn=st.selectbox('Pump Isolation Flange Connection Type',['Press','Sweat','Threaded'])
     mixing_valve_manufacturer=None
