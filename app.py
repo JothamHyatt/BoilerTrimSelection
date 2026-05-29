@@ -63,8 +63,9 @@ with st.sidebar:
     st.header('System Inputs')
     btu=st.number_input('BTU Capacity / Boiler Output BTU',0,5000000,120000,5000)
     boiler_manufacturer=st.selectbox('Boiler Manufacturer',sorted([x for x in df[df.component=='Boiler'].manufacturer.dropna().unique() if x!='N/A']),key='boiler_manufacturer_selector')
-    # FUEL_BLOCK_PLACEHOLDER
+    
     flue='N/A'; coil='N/A'; draft_hood_style=None
+    fuel='Natural Gas'
     if fuel=='Oil':
         flue=st.selectbox('Boiler Flue Type',['Top Flue','Rear Flue'])
         coil=st.selectbox('Tankless Coil',['Without Tankless Coil','With Tankless Coil'])
@@ -82,47 +83,47 @@ with st.sidebar:
 
     air_sep_manufacturer=st.selectbox('Air Separator Manufacturer',sorted([x for x in df[df.component=='Air Separator'].manufacturer.dropna().unique() if x!='N/A']),key='air_separator_manufacturer_selector')
     fillopt=st.selectbox('Fill Valve / Backflow Preventer',sorted([x for x in df[df.component==FILL].selection_option.dropna().unique() if x!='N/A']))
+    # --- VALID BOILER FUEL FILTERING ---
+    valid_fuels = []
 
-# --- Manufacturer-driven VALID fuel filtering (FIXED ORDER) ---
-valid_fuels = []
+    for f_opt in ['Natural Gas', 'Oil']:
+        test = filt(
+            df,
+            'Boiler',
+            int(btu),
+            sys_type,
+            conn,
+            f_opt,
+            flue='N/A',
+            coil='N/A',
+            fillopt=fillopt,
+            boiler_manufacturer=boiler_manufacturer
+        )
 
-for f_opt in ['Natural Gas', 'Oil']:
-    test = filt(
-        df,
-        'Boiler',
-        int(btu),
-        sys_type,
-        conn,
-        f_opt,
-        flue='N/A',
-        coil='N/A',
-        fillopt=fillopt,
-        boiler_manufacturer=boiler_manufacturer
+        if not test.empty:
+            valid_fuels.append(f_opt)
+
+    fuel_options = sorted(valid_fuels)
+
+    if len(fuel_options) == 0:
+        fuel_options = ['No options']
+
+    DEFAULT_FUEL = fuel_options[0]
+
+    if "fuel_selector" not in st.session_state:
+        st.session_state["fuel_selector"] = DEFAULT_FUEL
+    elif st.session_state["fuel_selector"] not in fuel_options:
+        st.session_state["fuel_selector"] = DEFAULT_FUEL
+
+    fuel = st.selectbox(
+        'Boiler Fuel Type',
+        fuel_options,
+        key="fuel_selector"
     )
 
-    if not test.empty:
-        valid_fuels.append(f_opt)
+    if len(fuel_options) == 1:
+        fuel = DEFAULT_FUEL
 
-fuel_options = sorted(valid_fuels)
-
-if len(fuel_options) == 0:
-    fuel_options = ['No options']
-
-DEFAULT_FUEL = fuel_options[0]
-
-if "fuel_selector" not in st.session_state:
-    st.session_state["fuel_selector"] = DEFAULT_FUEL
-elif st.session_state["fuel_selector"] not in fuel_options:
-    st.session_state["fuel_selector"] = DEFAULT_FUEL
-
-fuel = st.selectbox(
-    'Boiler Fuel Type',
-    fuel_options,
-    key="fuel_selector"
-)
-
-if len(fuel_options) == 1:
-    fuel = DEFAULT_FUEL
     sys_type=st.selectbox('Expansion Tank System Type',sorted([x for x in df[df.component=='Expansion Tank'].system_type.dropna().unique() if x!='Any']))
     conn=st.selectbox('Pump Isolation Flange Connection Type',['Press','Sweat','Threaded'])
     mixing_valve_manufacturer=None
