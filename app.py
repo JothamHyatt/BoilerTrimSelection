@@ -92,8 +92,7 @@ else:
         'Boiler Fuel Type',
         fuel_options,
         key="fuel_selector"
-    )    
-    flue='N/A'; coil='N/A'; draft_hood_style=None
+    )    flue='N/A'; coil='N/A'; draft_hood_style=None
     if fuel=='Oil':
         flue=st.selectbox('Boiler Flue Type',['Top Flue','Rear Flue'])
         coil=st.selectbox('Tankless Coil',['Without Tankless Coil','With Tankless Coil'])
