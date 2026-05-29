@@ -63,8 +63,36 @@ with st.sidebar:
     st.header('System Inputs')
     btu=st.number_input('BTU Capacity / Boiler Output BTU',0,5000000,120000,5000)
     boiler_manufacturer=st.selectbox('Boiler Manufacturer',sorted([x for x in df[df.component=='Boiler'].manufacturer.dropna().unique() if x!='N/A']),key='boiler_manufacturer_selector')
-    fuel=st.selectbox('Boiler Fuel Type',['Natural Gas','Oil'])
-    flue='N/A'; coil='N/A'; draft_hood_style=None
+boiler_base = df[
+    (df.component == 'Boiler') &
+    (df.manufacturer == boiler_manufacturer)
+]
+
+fuel_options = sorted(
+    boiler_base.fuel_type.dropna().unique()
+)
+
+# ✅ FORCE RESET if current value is invalid
+if "fuel_selector" in st.session_state:
+    if st.session_state["fuel_selector"] not in fuel_options:
+        st.session_state["fuel_selector"] = fuel_options[0]
+
+# ✅ NORMAL RENDER
+if len(fuel_options) == 1:
+    fuel = fuel_options[0]
+    st.selectbox(
+        'Boiler Fuel Type',
+        fuel_options,
+        index=0,
+        disabled=True,
+        key="fuel_selector"
+    )
+else:
+    fuel = st.selectbox(
+        'Boiler Fuel Type',
+        fuel_options,
+        key="fuel_selector"
+    )    flue='N/A'; coil='N/A'; draft_hood_style=None
     if fuel=='Oil':
         flue=st.selectbox('Boiler Flue Type',['Top Flue','Rear Flue'])
         coil=st.selectbox('Tankless Coil',['Without Tankless Coil','With Tankless Coil'])
