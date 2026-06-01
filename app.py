@@ -182,7 +182,11 @@ else:
         else: title='HEADER KIT'; body='NO HEADER KIT LISTED'
     else: item=steam_accessories(fuel)[1]; title='BACKFLOW PREVENTER'; body=f"{item['Manufacturer']}\\n{item['Model #']}\\nPART # {item['Part #']}"
 left,right=st.columns([1.65,1])
-with left: render_steam(STEAM_DIAGRAM_GIF) if heating_system=='Steam' else render_hot_water(HOT_WATER_DIAGRAM_GIF,hi,title,body)
+with left:
+    if heating_system == 'Steam':
+        render_steam(STEAM_DIAGRAM_GIF)
+    else:
+        render_hot_water(HOT_WATER_DIAGRAM_GIF, hi, title, body)
 with right:
     st.subheader('Highlighted Selection'); st.dataframe(sel[sel.Component==hi],use_container_width=True,hide_index=True)
 st.subheader('Selected Equipment Breakdown'); st.dataframe(sel,use_container_width=True,hide_index=True)
