@@ -75,6 +75,41 @@ def equipment_row(comp,m):
     if m.empty: return {'Component':comp,'Qty':'','Manufacturer':'','Model #':'No match','Part #':'No match','Pipe Size':'N/A','BTU Range':'No matching range','Description':'Add a matching rule.'}
     r=m.iloc[0]
     return {'Component':r.component,'Qty':int(r.quantity) if 'quantity' in m.columns and pd.notna(r.quantity) else 1,'Manufacturer':r.manufacturer,'Model #':r.model_number,'Part #':r.part_number,'Pipe Size':r.pipe_size,'BTU Range':f'{int(r.min_btu):,} - {int(r.max_btu):,} BTU' if {'min_btu','max_btu'}.issubset(m.columns) else 'N/A','Description':r.description if 'description' in m.columns else ''}
+def parse_kit_parts(value):
+    if not valid(value): return []
+    parts=[]
+    for item in str(value).split('|'):
+        item=item.strip()
+        if not item: continue
+        pieces=[p.strip() for p in item.split(':')]
+        if len(pieces)>=3:
+            desc=':'.join(pieces[:-2]).strip()
+            part=pieces[-2].strip()
+            qty_txt=pieces[-1].strip()
+        elif len(pieces)==2:
+            desc=pieces[0].strip()
+            part=pieces[1].strip()
+            qty_txt='1'
+        else:
+            desc='Boiler knockdown part'
+            part=pieces[0].strip()
+            qty_txt='1'
+        try:
+            qty=int(float(qty_txt))
+        except Exception:
+            qty=1
+        if valid(part): parts.append({'description':desc or 'Boiler knockdown part','part_number':part,'quantity':qty})
+    return parts
+def equipment_rows(comp,m):
+    if m.empty: return [equipment_row(comp,m)]
+    r=m.iloc[0]
+    if comp=='Boiler' and 'kit_parts' in m.columns and valid(r.kit_parts):
+        rows=[]
+        btu_range=f'{int(r.min_btu):,} - {int(r.max_btu):,} BTU' if {'min_btu','max_btu'}.issubset(m.columns) else 'N/A'
+        for part in parse_kit_parts(r.kit_parts):
+            rows.append({'Component':r.component,'Qty':part['quantity'],'Manufacturer':r.manufacturer,'Model #':r.model_number,'Part #':part['part_number'],'Pipe Size':r.pipe_size,'BTU Range':btu_range,'Description':part['description']})
+        if rows: return rows
+    return [equipment_row(comp,m)]
 def steam_accessories(fuel):
     feeder={'Component':'Steam Water Feeder','Qty':1,'Manufacturer':'Hydrolevel','Model #':'VXT-120' if fuel=='Oil' else 'VXT-24','Part #':'H45122' if fuel=='Oil' else 'H45026','Pipe Size':'N/A','BTU Range':'N/A','Description':f'Automatically included with {fuel.lower()} steam boiler selection.'}
     backflow={'Component':'Backflow Preventer','Qty':1,'Manufacturer':'Watts','Model #':'W9DM3D','Part #':'W9DM3D','Pipe Size':'N/A','BTU Range':'N/A','Description':'Automatically included with steam boiler selection.'}
@@ -99,7 +134,7 @@ def render_steam(diagram_path):
 
 if not DB.exists(): st.error('Missing hydronic_parts_database.csv'); st.stop()
 df=pd.read_csv(DB); df.columns=df.columns.str.strip()
-for c in ['component','manufacturer','boiler_type','system_type','connection_type','fuel_type','flue_type','tankless_coil','selection_option','pipe_size','draft_hood_style','model_number','part_number','description','header_kit']:
+for c in ['component','manufacturer','boiler_type','system_type','connection_type','fuel_type','flue_type','tankless_coil','selection_option','pipe_size','draft_hood_style','model_number','part_number','description','header_kit','kit_parts']:
     if c in df.columns: df[c]=df[c].astype(str).str.strip()
 st.title('THE BOILER WIZARD')
 st.caption('A Mystical, Magical, Hot Water and Steam Boiler equipment selection application for residential applications')
@@ -154,11 +189,11 @@ rows=[]
 if heating_system=='Hot Water':
     for comp in visible_order:
         m=filt(df,comp,int(btu),sys_type,conn,fuel,flue,coil,fillopt,boiler_manufacturer,air_sep_manufacturer,mixing_valve_manufacturer,mixing_valve_connection_size,mixing_valve_connection_type,draft_hood_style,heating_system)
-        rows.append(equipment_row(comp,m))
+        rows.extend(equipment_rows(comp,m))
     if any(x['Component']=='Expansion Tank' and x['Model #'] in PSHT for x in rows): rows.append({'Component':'Expansion Tank Service Valve','Qty':1,'Manufacturer':'Webstone','Model #':'WH41672','Part #':'WH41672','Pipe Size':'1/2"','BTU Range':'N/A','Description':'Automatically included with PSHT expansion tank selection.'})
 else:
     m=filt(df,'Boiler',int(btu),None,None,fuel,'N/A','N/A',None,boiler_manufacturer,heating_system=heating_system)
-    rows.append(equipment_row('Boiler',m)); rows.extend(steam_accessories(fuel))
+    rows.extend(equipment_rows('Boiler',m)); rows.extend(steam_accessories(fuel))
     if steam_header_kit_choice=='Yes' and not m.empty and 'header_kit' in m.columns and valid(m.iloc[0].header_kit): rows.append(header_kit_row(m.iloc[0]))
 sel=pd.DataFrame(rows)
 if heating_system=='Hot Water':
