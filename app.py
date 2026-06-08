@@ -111,7 +111,7 @@ def equipment_rows(comp,m):
             rows.append({'Component':r.component,'Qty':part['quantity'],'Manufacturer':r.manufacturer,'Model #':r.model_number,'Part #':part['part_number'],'Pipe Size':r.pipe_size,'BTU Range':btu_range,'Description':part['description']})
         if rows: return rows
     return [equipment_row(comp,m)]
-ddef wintegrate_material_text(sel):
+def wintegrate_material_text(sel):
     lines=['X','ADD']
     skip_parts={'','N/A','No match','nan','None'}
     for _, r in sel.iterrows():
