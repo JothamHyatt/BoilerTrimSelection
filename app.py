@@ -103,7 +103,7 @@ def parse_kit_parts(value):
 def equipment_rows(comp,m):
     if m.empty: return [equipment_row(comp,m)]
     r=m.iloc[0]
-    if comp=='Boiler' and 'kit_parts' in m.columns and valid(r.kit_parts):
+    if comp in {'Boiler', FILL} and 'kit_parts' in m.columns and valid(r.kit_parts):
         rows=[]
         btu_range=f'{int(r.min_btu):,} - {int(r.max_btu):,} BTU' if {'min_btu','max_btu'}.issubset(m.columns) else 'N/A'
         for part in parse_kit_parts(r.kit_parts):
