@@ -1,5 +1,6 @@
 
 import base64
+import json
 import html as html_lib
 from pathlib import Path
 import pandas as pd
@@ -122,6 +123,36 @@ def wintegrate_material_text(sel):
             lines.append(qty)
             lines.append(part)
     return '\r\n'.join(lines)
+def render_wintegration_copy_box(wint_text):
+    payload=json.dumps(wint_text)
+    html=f'''
+    <div style="font-family: monospace; color: #66ff66; background: #050805; border: 1px solid #1f7f1f; padding: 10px; border-radius: 4px;">
+      <div style="font-weight: bold; margin-bottom: 8px; color: #99ff99;">NOTE: Must enter using Express mode in Trilogy.</div>
+      <button id="copy_wint" style="background: #0b2b0b; color: #99ff99; border: 1px solid #66ff66; padding: 7px 12px; border-radius: 4px; cursor: pointer; font-family: monospace; font-weight: bold; margin-bottom: 8px;">COPY MATERIAL LIST</button>
+      <span id="copy_status" style="margin-left: 10px; color: #99ff99;"></span>
+      <textarea id="wint_material" style="width: 100%; height: 190px; box-sizing: border-box; background: #020402; color: #66ff66; border: 1px solid #1f7f1f; padding: 8px; font-family: monospace; white-space: pre;" spellcheck="false"></textarea>
+    </div>
+    <script>
+      const materialText = {payload};
+      const textArea = document.getElementById('wint_material');
+      const button = document.getElementById('copy_wint');
+      const status = document.getElementById('copy_status');
+      textArea.value = materialText;
+      button.addEventListener('click', async function() {{
+        try {{
+          await navigator.clipboard.writeText(materialText);
+          status.textContent = 'Copied!';
+        }} catch (err) {{
+          textArea.focus();
+          textArea.select();
+          document.execCommand('copy');
+          status.textContent = 'Copied!';
+        }}
+        setTimeout(function() {{ status.textContent = ''; }}, 1800);
+      }});
+    </script>
+    '''
+    components.html(html,height=300,scrolling=False)
 def steam_accessories(fuel):
     feeder={'Component':'Steam Water Feeder','Qty':1,'Manufacturer':'Hydrolevel','Model #':'VXT-120' if fuel=='Oil' else 'VXT-24','Part #':'H45122' if fuel=='Oil' else 'H45026','Pipe Size':'N/A','BTU Range':'N/A','Description':f'Automatically included with {fuel.lower()} steam boiler selection.'}
     backflow={'Component':'Backflow Preventer','Qty':1,'Manufacturer':'Watts','Model #':'W9DM3D','Part #':'W9DM3D','Pipe Size':'N/A','BTU Range':'N/A','Description':'Automatically included with steam boiler selection.'}
@@ -238,9 +269,6 @@ with right:
     st.subheader('Highlighted Selection'); st.dataframe(sel[sel.Component==hi],use_container_width=True,hide_index=True)
 st.subheader('Selected Equipment Breakdown'); st.dataframe(sel,use_container_width=True,hide_index=True)
 st.download_button('Download Selected Equipment Breakdown',data=sel.to_csv(index=False),file_name='selected_equipment_breakdown.csv',mime='text/csv')
-st.subheader('wIntegrate Material List')
-wint_text=wintegrate_material_text(sel)
-st.text_area('Copy/Paste into wIntegrate',value=wint_text,height=220,key='wintegrate_material_list')
 st.subheader('Available Ranges for Highlighted Component')
 if heating_system=='Steam' and hi in {'Steam Water Feeder','Backflow Preventer','Header Kit'}: st.dataframe(sel[sel.Component==hi],use_container_width=True,hide_index=True)
 elif hi=='Boiler': st.dataframe(boiler_pool(df,heating_system),use_container_width=True,hide_index=True)
