@@ -270,7 +270,7 @@ with right:
 st.subheader('Selected Equipment Breakdown'); st.dataframe(sel,use_container_width=True,hide_index=True)
 st.download_button('Download Selected Equipment Breakdown',data=sel.to_csv(index=False),file_name='selected_equipment_breakdown.csv',mime='text/csv')
 st.subheader('wIntegrate Material List')
-st.warning('NOTE: Must enter using Express mode in Trilogy.')
+st.warning('NOTE: Paste into lower right hand field in Trilogy.')
 wint_text=wintegrate_material_text(sel)
 render_wintegration_copy_box(wint_text)
 st.subheader('Available Ranges for Highlighted Component')
