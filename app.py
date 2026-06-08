@@ -111,8 +111,8 @@ def equipment_rows(comp,m):
             rows.append({'Component':r.component,'Qty':part['quantity'],'Manufacturer':r.manufacturer,'Model #':r.model_number,'Part #':part['part_number'],'Pipe Size':r.pipe_size,'BTU Range':btu_range,'Description':part['description']})
         if rows: return rows
     return [equipment_row(comp,m)]
-def wintegrate_material_text(sel):
-    lines=[]
+ddef wintegrate_material_text(sel):
+    lines=['X','A']
     skip_parts={'','N/A','No match','nan','None'}
     for _, r in sel.iterrows():
         qty=str(r.get('Qty','1')).strip()
@@ -122,7 +122,8 @@ def wintegrate_material_text(sel):
         if part and part not in skip_parts:
             lines.append(qty)
             lines.append(part)
-    return '\r\n'.join(lines)
+    lines.append('E')
+    return '\r\n'.join(lines) + '\r\n'
 def render_wintegration_copy_box(wint_text):
     payload=json.dumps(wint_text)
     html=f'''
