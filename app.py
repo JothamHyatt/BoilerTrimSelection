@@ -110,6 +110,18 @@ def equipment_rows(comp,m):
             rows.append({'Component':r.component,'Qty':part['quantity'],'Manufacturer':r.manufacturer,'Model #':r.model_number,'Part #':part['part_number'],'Pipe Size':r.pipe_size,'BTU Range':btu_range,'Description':part['description']})
         if rows: return rows
     return [equipment_row(comp,m)]
+def wintegrate_material_text(sel):
+    lines=[]
+    skip_parts={'','N/A','No match','nan','None'}
+    for _, r in sel.iterrows():
+        qty=str(r.get('Qty','1')).strip()
+        part=str(r.get('Part #','')).strip()
+        if not qty or qty in skip_parts:
+            qty='1'
+        if part and part not in skip_parts:
+            lines.append(qty)
+            lines.append(part)
+    return '\r\n'.join(lines)
 def steam_accessories(fuel):
     feeder={'Component':'Steam Water Feeder','Qty':1,'Manufacturer':'Hydrolevel','Model #':'VXT-120' if fuel=='Oil' else 'VXT-24','Part #':'H45122' if fuel=='Oil' else 'H45026','Pipe Size':'N/A','BTU Range':'N/A','Description':f'Automatically included with {fuel.lower()} steam boiler selection.'}
     backflow={'Component':'Backflow Preventer','Qty':1,'Manufacturer':'Watts','Model #':'W9DM3D','Part #':'W9DM3D','Pipe Size':'N/A','BTU Range':'N/A','Description':'Automatically included with steam boiler selection.'}
@@ -226,6 +238,9 @@ with right:
     st.subheader('Highlighted Selection'); st.dataframe(sel[sel.Component==hi],use_container_width=True,hide_index=True)
 st.subheader('Selected Equipment Breakdown'); st.dataframe(sel,use_container_width=True,hide_index=True)
 st.download_button('Download Selected Equipment Breakdown',data=sel.to_csv(index=False),file_name='selected_equipment_breakdown.csv',mime='text/csv')
+st.subheader('wIntegrate Material List')
+wint_text=wintegrate_material_text(sel)
+st.text_area('Copy/Paste into wIntegrate',value=wint_text,height=220,key='wintegrate_material_list')
 st.subheader('Available Ranges for Highlighted Component')
 if heating_system=='Steam' and hi in {'Steam Water Feeder','Backflow Preventer','Header Kit'}: st.dataframe(sel[sel.Component==hi],use_container_width=True,hide_index=True)
 elif hi=='Boiler': st.dataframe(boiler_pool(df,heating_system),use_container_width=True,hide_index=True)
